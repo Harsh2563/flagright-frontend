@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { title, subtitle } from '../../components/ui/primitives';
 import { UsersIcon } from '../../components/ui/icons';
-import { UserFilter, UserFilters } from '../../components/user-filter';
 import { UserCard } from '../../components/userCard';
 import { getUsers } from '../../services/userService';
 import { IUser } from '../../types/user';
@@ -30,25 +29,46 @@ export default function UsersPage() {
   }, []);
   return (
     <section className="container mx-auto px-4 py-8">
-      <div className="flex items-center gap-4 mb-6">
-        <div className="p-2 bg-primary/10 rounded-full">
-          <UsersIcon size={24} className="text-primary" />
+      {' '}
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center gap-4">
+          <div className="p-2 bg-primary/10 rounded-full">
+            <UsersIcon size={24} className="text-primary" />
+          </div>
+          <div>
+            <h1 className={title({ size: 'sm' })}>Users</h1>
+            <p className={subtitle({ class: 'w-full md:w-full mt-1' })}>
+              View and manage user accounts and their relationships
+            </p>
+          </div>
         </div>
-        <div>
-          <h1 className={title({ size: 'sm' })}>Users</h1>
-          <p className={subtitle({ class: 'w-full md:w-full mt-1' })}>
-            View and manage user accounts and their relationships
-          </p>
-        </div>
+        <button
+          onClick={() => (window.location.href = '/users/add-user')}
+          className="bg-primary text-white px-4 py-2 rounded-md flex items-center gap-1"
+        >
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Add User
+        </button>
       </div>
-
       {loading ? (
         <div className="flex justify-center py-10">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
         </div>
       ) : error ? (
         <div className="text-danger text-center py-10">{error}</div>
-      ) : users.length === 0 ? (
+      ) : users?.length === 0 ? (
         <div className="text-center py-10 text-default-500">
           No users found.
         </div>
