@@ -24,12 +24,14 @@ import {
   UserFormSchema,
 } from '../../../schemas/userSchema';
 import { ValidationErrors } from '../../../types/error';
-import { handleUser } from '../../../services/userService';
+import { useUsers } from '../../../contexts/UserContext';
 
 export default function AddUserPage() {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { addUser } = useUsers();
+
   const [formData, setFormData] = useState<UserFormType>({
     firstName: '',
     lastName: '',
@@ -92,13 +94,12 @@ export default function AddUserPage() {
       setValidationErrors(errors);
       return;
     }
-
     try {
       setIsSubmitting(true);
 
       // Form validation passed - proceed with submission
       const user = formDataToUser(formData);
-      const newUser = await handleUser(user);
+      const newUser = await addUser(user);
 
       if (newUser) {
         router.push('/users');

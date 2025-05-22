@@ -1,32 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { title, subtitle } from '../../components/ui/primitives';
 import { UsersIcon } from '../../components/ui/icons';
 import { UserCard } from '../../components/userCard';
-import { getUsers } from '../../services/userService';
-import { IUser } from '../../types/user';
+import { useUsers } from '../../contexts/UserContext';
+import { useRouter } from 'next/navigation';
 
 export default function UsersPage() {
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    async function fetchUsers() {
-      try {
-        const data = await getUsers();
-        setUsers(data);
-      } catch (err) {
-        setError('Failed to fetch users. Please try again later.');
-        console.error('Error fetching users:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    fetchUsers();
-  }, []);
+  const { users, loading, error } = useUsers();
+  const router = useRouter();
   return (
     <section className="container mx-auto px-4 py-8">
       {' '}
@@ -41,9 +23,9 @@ export default function UsersPage() {
               View and manage user accounts and their relationships
             </p>
           </div>
-        </div>
+        </div>{' '}
         <button
-          onClick={() => (window.location.href = '/users/add-user')}
+          onClick={() => router.push('/users/add-user')}
           className="bg-primary text-white px-4 py-2 rounded-md flex items-center gap-1"
         >
           <svg
