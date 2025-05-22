@@ -20,8 +20,11 @@ import { UsersIcon } from '../../../components/ui/icons';
 import { title } from '../../../components/ui/primitives';
 import {
   UserFormType,
+  formDataToUser,
+  UserFormSchema,
 } from '../../../schemas/userSchema';
 import { ValidationErrors } from '../../../types/error';
+import { handleUser } from '../../../services/userService';
 
 export default function AddUserPage() {
   const router = useRouter();
@@ -71,10 +74,55 @@ export default function AddUserPage() {
       setFormData((prev) => ({ ...prev, city: '' }));
     }
   }, [formData.state, formData.country]);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  const handleSubmit = (e: React.FormEvent) => {};
+    setValidationErrors({});
 
+    // Validate form data against the schema
+    const validationResult = UserFormSchema.safeParse(formData);
+
+    if (!validationResult.success) {
+      const errors: ValidationErrors = {};
+      validationResult.error.errors.forEach((err) => {
+        const path = err.path[0] as keyof ValidationErrors;
+        errors[path] = err.message;
+      });
+
+      setValidationErrors(errors);
+      return;
+    }
+
+    try {
+      setIsSubmitting(true);
+
+      // Form validation passed - proceed with submission
+      const user = formDataToUser(formData);
+      const newUser = await handleUser(user);
+
+      if (newUser) {
+        router.push('/users');
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        setValidationErrors({
+          ...validationErrors,
+          general: `Error: ${error.message}`,
+        });
+      } else {
+        console.error('Error creating user:', error);
+        setValidationErrors({
+          ...validationErrors,
+          general: 'An unknown error occurred. Please try again.',
+        });
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   const handleExternalSubmit = () => {
+    // Simply request the form to submit, which will trigger handleSubmit
+    // where validation will be performed
     if (formRef.current) {
       formRef.current.requestSubmit();
     }
@@ -331,18 +379,29 @@ export default function AddUserPage() {
             </div>
           </Form>
         </CardBody>
-        <Divider />
-        <CardFooter className="flex justify-end gap-2">
-          <Button variant="flat" color="default" onClick={() => router.back()}>
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            isLoading={isSubmitting}
-            onClick={handleExternalSubmit}
-          >
-            {isSubmitting ? 'Adding...' : 'Add User'}
-          </Button>
+        <Divider />{' '}
+        <CardFooter className="flex flex-col gap-4">
+          {validationErrors.general && (
+            <div className="w-full bg-danger-50 text-danger p-3 rounded-md text-center">
+              {validationErrors.general}
+            </div>
+          )}
+          <div className="flex justify-end gap-2 w-full">
+            <Button
+              variant="flat"
+              color="default"
+              onClick={() => router.back()}
+            >
+              Cancel
+            </Button>
+            <Button
+              color="primary"
+              isLoading={isSubmitting}
+              onClick={handleExternalSubmit}
+            >
+              {isSubmitting ? 'Adding...' : 'Add User'}
+            </Button>
+          </div>
         </CardFooter>
       </Card>
     </section>
