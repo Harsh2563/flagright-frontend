@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import { IconSvgProps } from "../../types";
+import { IconSvgProps } from "../../types/user";
 
 export const Logo: React.FC<IconSvgProps> = ({
   size = 36,
@@ -168,6 +168,32 @@ export const TransactionsIcon: React.FC<IconSvgProps> = ({
         strokeWidth="1.5"
         strokeMiterlimit="10"
         strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+};
+
+export const ChevronLeftIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      width={size || width}
+      viewBox="0 0 24 24"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path 
+        d="M15 18L9 12L15 6" 
+        stroke="currentColor" 
+        strokeWidth="2" 
+        strokeLinecap="round" 
         strokeLinejoin="round"
       />
     </svg>
