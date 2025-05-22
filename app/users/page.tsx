@@ -5,6 +5,7 @@ import { title, subtitle } from '../../components/ui/primitives';
 import { UsersIcon } from '../../components/ui/icons';
 import { UserFilter, UserFilters } from '../../components/user-filter';
 import { UserCard } from '../../components/userCard';
+import { getUsers } from '../../services/userService';
 import { IUser } from '../../types/user';
 
 export default function UsersPage() {
@@ -12,6 +13,21 @@ export default function UsersPage() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    async function fetchUsers() {
+      try {
+        const data = await getUsers();
+        setUsers(data);
+      } catch (err) {
+        setError('Failed to fetch users. Please try again later.');
+        console.error('Error fetching users:', err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchUsers();
+  }, []);
   return (
     <section className="container mx-auto px-4 py-8">
       <div className="flex items-center gap-4 mb-6">
