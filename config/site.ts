@@ -1,8 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: 'Falgright Visualizer',
-  description: 'Visualize your Flagright data with ease.',
+  name: 'Flagright Visualizer',
+  description: 'Visualize Users and Transaction data with ease.',
   navItems: [
     {
       label: 'Home',
