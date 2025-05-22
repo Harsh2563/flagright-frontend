@@ -36,7 +36,10 @@ export const UserFormSchema = z.object({
   state: z.string().optional(),
   postalCode: z.string().optional(),
   country: z.string().optional(),
-  paymentMethodType: z.nativeEnum(PaymentMethodType).optional(),
+  paymentMethodTypes: z
+    .array(z.nativeEnum(PaymentMethodType))
+    .default([])
+    .optional(),
 });
 
 export type UserFormType = z.infer<typeof UserFormSchema>;
@@ -54,13 +57,9 @@ export const formDataToUser = (formData: UserFormType): UserSchemaType => {
       postalCode: formData.postalCode,
       country: formData.country,
     },
-    paymentMethods: formData.paymentMethodType
-      ? [
-          {
-            id: crypto.randomUUID(),
-            type: formData.paymentMethodType,
-          },
-        ]
-      : [],
+    paymentMethods: formData?.paymentMethodTypes?.map((type) => ({
+      id: crypto.randomUUID(),
+      type: type,
+    })),
   };
 };

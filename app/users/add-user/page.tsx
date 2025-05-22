@@ -40,7 +40,7 @@ export default function AddUserPage() {
     state: '',
     postalCode: '',
     country: '',
-    paymentMethodType: undefined,
+    paymentMethodTypes: [],
   });
 
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
@@ -224,7 +224,6 @@ export default function AddUserPage() {
                 }
               />
             </div>
-
             {/* Address */}
             <div className="space-y-8">
               <h3 className="text-lg font-semibold">Address Information</h3>
@@ -343,43 +342,52 @@ export default function AddUserPage() {
                   }
                 />
               </div>
-            </div>
-
+            </div>{' '}
             {/* Payment */}
             <div className="space-y-8">
-              <h3 className="text-lg font-semibold">Payment Method</h3>
+              <h3 className="text-lg font-semibold">
+                Payment Methods{' '}
+                <span className="text-sm font-normal text-gray-500">
+                  (Select multiple)
+                </span>
+              </h3>
               <Select
-                label="Payment Type"
+                label="Payment Types"
                 labelPlacement="outside"
-                name="paymentMethodType"
-                placeholder="Select a payment method"
-                selectedKeys={
-                  formData.paymentMethodType ? [formData.paymentMethodType] : []
-                }
-                errorMessage={validationErrors.paymentMethodType}
-                isInvalid={!!validationErrors.paymentMethodType}
+                name="paymentMethodTypes"
+                placeholder="Select payment methods"
+                selectionMode="multiple"
+                selectedKeys={new Set(formData.paymentMethodTypes)}
+                errorMessage={validationErrors.paymentMethodTypes}
+                isInvalid={!!validationErrors.paymentMethodTypes}
                 onSelectionChange={(keys) => {
-                  const selectedKey =
+                  const selectedKeys =
                     keys instanceof Set
-                      ? (Array.from(keys)[0] as PaymentMethodType)
-                      : undefined;
+                      ? (Array.from(keys) as PaymentMethodType[])
+                      : [];
                   setFormData((prev) => ({
                     ...prev,
-                    paymentMethodType: selectedKey,
+                    paymentMethodTypes: selectedKeys,
                   }));
                 }}
                 className="w-full"
               >
                 {Object.values(PaymentMethodType).map((type) => (
                   <SelectItem key={type} textValue={type.replace('_', ' ')}>
-                    {type.replace('_', ' ')}
+                    {type
+                      .replace('_', ' ')
+                      .split(' ')
+                      .map(
+                        (word) => word.charAt(0).toUpperCase() + word.slice(1)
+                      )
+                      .join(' ')}
                   </SelectItem>
                 ))}
               </Select>
             </div>
           </Form>
         </CardBody>
-        <Divider />{' '}
+        <Divider />
         <CardFooter className="flex flex-col gap-4">
           {validationErrors.general && (
             <div className="w-full bg-danger-50 text-danger p-3 rounded-md text-center">
