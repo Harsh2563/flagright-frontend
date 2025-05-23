@@ -62,6 +62,15 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
         >
           View Details
         </Button>
+        <Button
+          as={Link}
+          href={`users/add-user/${user.id}`}
+          color="secondary"
+          variant="flat"
+          size="sm"
+        >
+          Update
+        </Button>
       </CardFooter>
     </Card>
   );

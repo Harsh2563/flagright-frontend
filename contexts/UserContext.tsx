@@ -48,20 +48,6 @@ export function UserProvider({ children }: { children: ReactNode }) {
     }
   }, [users.length, initialized]);
 
-  const refreshUsers = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await getUsers();
-      setUsers(data);
-    } catch (err) {
-      console.error('Error refreshing users:', err);
-      setError('Failed to refresh users. Please try again later.');
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
   const addUser = useCallback(
     async (userData: UserSchemaType): Promise<IUser | null> => {
       try {
@@ -85,6 +71,20 @@ export function UserProvider({ children }: { children: ReactNode }) {
     },
     []
   );
+
+  const refreshUsers = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getUsers();
+      setUsers(data);
+    } catch (err) {
+      console.error('Error refreshing users:', err);
+      setError('Failed to refresh users. Please try again later.');
+    } finally {
+      setLoading(false);
+    }
+  }, [addUser]);
 
   // Initialize users on mount
   React.useEffect(() => {

@@ -27,6 +27,7 @@ export const UserSchema = z.object({
 export type UserSchemaType = z.infer<typeof UserSchema>;
 
 export const UserFormSchema = z.object({
+  id: z.string().uuid('Invalid user ID format').optional(),
   firstName: z.string().min(2, 'First name must be at least 2 characters'),
   lastName: z.string().min(2, 'Last name must be at least 2 characters'),
   email: z.string().email('Invalid email format'),
@@ -46,6 +47,7 @@ export type UserFormType = z.infer<typeof UserFormSchema>;
 
 export const formDataToUser = (formData: UserFormType): UserSchemaType => {
   return {
+    id: formData.id,
     firstName: formData.firstName,
     lastName: formData.lastName,
     email: formData.email,
