@@ -20,3 +20,12 @@ export interface IUserRelationshipGraphResponse {
     receivedTransactions: IUserTransactionData[];
   };
 }
+
+export interface IUserRelationshipGraphProps {
+  relationships:
+    | IUserRelationshipGraphResponse[]
+    | IUserRelationshipGraphResponse
+    | null;
+  isLoading?: boolean;
+  centerUserId?: string;
+}

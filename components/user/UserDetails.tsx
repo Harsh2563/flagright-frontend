@@ -4,9 +4,9 @@ import { UserHeader } from './UserHeader';
 import { PersonalInfoCard } from './PersonalInfoCard';
 import { AddressCard } from './AddressCard';
 import { PaymentMethodsCard } from './PaymentMethodsCard';
-import { GraphGenerator } from './GraphGenerator';
 import { BackButton } from './BackButton';
 import { UserRelation } from './UserRelation';
+import { UserRelationshipGraph } from './UserRelationshipGraph.';
 import { IUser } from '../../types/user';
 import { IUserRelationshipGraphResponse } from '../../types/relationship';
 
@@ -22,10 +22,7 @@ interface UserDetailsProps {
 
 export function UserDetails({
   user,
-  onGenerateGraph,
   onBack,
-  isGeneratingGraph = false,
-  loadingText = 'Generating user relationship graph',
   relationships = null,
   relationshipsLoading = false,
 }: UserDetailsProps) {
@@ -38,10 +35,10 @@ export function UserDetails({
         <AddressCard user={user} />
         <PaymentMethodsCard user={user} />
       </div>{' '}
-      <GraphGenerator
-        onGenerateGraph={onGenerateGraph}
-        isGeneratingGraph={isGeneratingGraph}
-        loadingText={loadingText}
+      <UserRelationshipGraph
+        relationships={relationships}
+        isLoading={relationshipsLoading}
+        centerUserId={user?.id}
       />
       <UserRelation
         relationships={relationships}
