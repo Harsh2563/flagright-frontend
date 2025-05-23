@@ -8,13 +8,13 @@ import {
   NavbarMenuItem,
 } from '@heroui/navbar';
 import { Link } from '@heroui/link';
-import { ThemeSwitch } from '../components/theme-switch';
+import { ThemeSwitch } from '../theme-switch';
 import { link as linkStyles } from '@heroui/theme';
 import NextLink from 'next/link';
 import clsx from 'clsx';
 
-import { siteConfig } from '../config/site';
-import { Logo } from '../components/ui/icons';
+import { siteConfig } from '../../config/site';
+import { Logo } from '../ui/icons';
 
 export const Navbar = () => {
   return (

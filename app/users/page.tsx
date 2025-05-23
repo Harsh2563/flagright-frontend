@@ -2,7 +2,7 @@
 
 import { title, subtitle } from '../../components/ui/primitives';
 import { UsersIcon } from '../../components/ui/icons';
-import { UserCard } from '../../components/userCard';
+import { UserCard } from '../../components/user/UserCard';
 import { useUsers } from '../../contexts/UserContext';
 import { useRouter } from 'next/navigation';
 

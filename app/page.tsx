@@ -1,6 +1,6 @@
-import { HeroSection } from '../components/heroSection';
-import { FeatureCard } from '../components/featureCard';
-import { CtaCard } from '../components/ctaCard';
+import { HeroSection } from '../components/home/HeroSection';
+import { FeatureCard } from '../components/home/FeatureCard';
+import { CtaCard } from '../components/home/CtaCard';
 import {
   UsersIcon,
   TransactionsIcon,
@@ -88,7 +88,8 @@ export default function Home() {
                 Graph Database Integration
               </h3>
               <p className="text-default-500">
-                Powered by a robust graph database for efficient relationship visualization when exploring individual users and transactions.
+                Powered by a robust graph database for efficient relationship
+                visualization when exploring individual users and transactions.
               </p>
             </div>
           </div>

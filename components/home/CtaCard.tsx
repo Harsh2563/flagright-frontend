@@ -2,13 +2,7 @@ import React from 'react';
 import { Card } from '@heroui/card';
 import { button as buttonStyles } from '@heroui/theme';
 import { Link } from '@heroui/link';
-
-interface CtaCardProps {
-  title: string;
-  description: string;
-  buttonText: string;
-  buttonHref: string;
-}
+import { CtaCardProps } from '@/types/home';
 
 export const CtaCard: React.FC<CtaCardProps> = ({
   title,

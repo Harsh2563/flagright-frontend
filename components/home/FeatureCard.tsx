@@ -2,15 +2,7 @@ import React from 'react';
 import { Card } from '@heroui/card';
 import { button as buttonStyles } from '@heroui/theme';
 import { Link } from '@heroui/link';
-
-interface FeatureCardProps {
-  title: string;
-  description: string;
-  icon: React.ReactNode;
-  linkText: string;
-  linkHref: string;
-  color?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
-}
+import { FeatureCardProps } from '@/types/home';
 
 export const FeatureCard: React.FC<FeatureCardProps> = ({
   title,

@@ -3,7 +3,7 @@ import { Card, CardBody, CardFooter } from '@heroui/card';
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Link } from '@heroui/link';
-import { IUser } from '../types/user';
+import { IUser } from '../../types/user';
 
 interface UserCardProps {
   user: IUser;
