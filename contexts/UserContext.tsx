@@ -31,7 +31,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
   const fetchUsers = useCallback(async () => {
     if (initialized && users.length > 0) {
-      return; 
+      return;
     }
 
     try {
@@ -59,7 +59,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
           // Update the users array with the new user
           setUsers((prevUsers) => [...prevUsers, newUser]);
         }
-
+        refreshUsers();
         return newUser;
       } catch (err) {
         console.error('Error adding user:', err);
@@ -84,7 +84,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     } finally {
       setLoading(false);
     }
-  }, [addUser]);
+  }, []);
 
   // Initialize users on mount
   React.useEffect(() => {
