@@ -6,3 +6,4 @@ export * from './GraphGenerator';
 export * from './BackButton';
 export * from './UserDetails';
 export * from './UserNotFound';
+export * from './UserRelation';

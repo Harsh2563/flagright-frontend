@@ -6,9 +6,15 @@ import { RelationsIcon } from '../../components/ui/icons';
 
 interface GraphGeneratorProps {
   onGenerateGraph: () => void;
+  isGeneratingGraph?: boolean;
+  loadingText?: string;
 }
 
-export function GraphGenerator({ onGenerateGraph }: GraphGeneratorProps) {
+export function GraphGenerator({
+  onGenerateGraph,
+  isGeneratingGraph = false,
+  loadingText = 'Generating user relationship graph',
+}: GraphGeneratorProps) {
   return (
     <div className="mt-10 relative">
       <div
@@ -22,13 +28,11 @@ export function GraphGenerator({ onGenerateGraph }: GraphGeneratorProps) {
       >
         {/* Overlay for better visibility */}
         <div className="absolute inset-0 bg-gradient-to-br from-transparent to-background/80 z-0"></div>
-
         {/* Decorative network nodes */}
         <div className="absolute top-6 left-12 w-3 h-3 rounded-full bg-primary/50 animate-pulse"></div>
         <div className="absolute top-12 left-32 w-2 h-2 rounded-full bg-secondary/50 animate-pulse"></div>
         <div className="absolute bottom-12 right-24 w-4 h-4 rounded-full bg-success/50 animate-pulse"></div>
         <div className="absolute bottom-20 left-1/4 w-2 h-2 rounded-full bg-warning/50 animate-pulse"></div>
-
         {/* Decorative lines */}
         <svg className="absolute inset-0 w-full h-full opacity-20">
           <line
@@ -55,23 +59,39 @@ export function GraphGenerator({ onGenerateGraph }: GraphGeneratorProps) {
             stroke="var(--success-500)"
             strokeWidth="1"
           />
-        </svg>
-
+        </svg>{' '}
         {/* Button container with z-index to stay above the overlay */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full">
-          <h3 className={subtitle({ class: 'mb-4 text-center max-w-lg' })}>
-            Visualize how this user connects with others through shared
-            attributes and transactions
-          </h3>
-          <Button
-            color="secondary"
-            size="lg"
-            className="px-10 py-7 text-lg font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105 hover:opacity-90"
-            onClick={onGenerateGraph}
-            startContent={<RelationsIcon size={28} />}
-          >
-            Generate Relationship Graph
-          </Button>
+          {isGeneratingGraph ? (
+            <div className="text-center">
+              <div className="mb-4">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto"></div>
+              </div>
+              <h3
+                className={subtitle({
+                  class: 'text-center max-w-lg animate-pulse',
+                })}
+              >
+                {loadingText}
+              </h3>
+            </div>
+          ) : (
+            <>
+              <h3 className={subtitle({ class: 'mb-4 text-center max-w-lg' })}>
+                Visualize how this user connects with others through shared
+                attributes and transactions
+              </h3>
+              <Button
+                color="secondary"
+                size="lg"
+                className="px-10 py-7 text-lg font-semibold shadow-lg hover:shadow-xl transition-all hover:scale-105 hover:opacity-90"
+                onClick={onGenerateGraph}
+                startContent={<RelationsIcon size={28} />}
+              >
+                Generate Relationship Graph
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>
