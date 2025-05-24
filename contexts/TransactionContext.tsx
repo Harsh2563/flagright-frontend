@@ -8,7 +8,14 @@ import React, {
   ReactNode,
 } from 'react';
 import { ITransaction } from '../types/transaction';
-import { getTransactions } from '../services/transactionService';
+import {
+  getTransactions,
+  handleTransaction,
+} from '../services/transactionService';
+import { z } from 'zod';
+import { TransactionSchema } from '../schemas/transactionSchema';
+
+type TransactionSchemaType = z.infer<typeof TransactionSchema>;
 
 interface TransactionContextType {
   transactions: ITransaction[];
@@ -17,9 +24,14 @@ interface TransactionContextType {
   fetchTransactions: () => Promise<void>;
   refreshTransactions: () => Promise<void>;
   getTransactionById: (id: string) => ITransaction | undefined;
+  addTransaction: (
+    transactionData: TransactionSchemaType
+  ) => Promise<ITransaction | null>;
 }
 
-const TransactionContext = createContext<TransactionContextType | undefined>(undefined);
+const TransactionContext = createContext<TransactionContextType | undefined>(
+  undefined
+);
 
 export function TransactionProvider({ children }: { children: ReactNode }) {
   const [transactions, setTransactions] = useState<ITransaction[]>([]);
@@ -70,9 +82,26 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
   // Helper function to get a transaction by ID
   const getTransactionById = useCallback(
     (id: string) => {
-      return transactions.find(transaction => transaction.id === id);
+      return transactions.find((transaction) => transaction.id === id);
     },
     [transactions]
+  );
+  const addTransaction = useCallback(
+    async (transactionData: TransactionSchemaType) => {
+      try {
+        setLoading(true);
+        const newTransaction = await handleTransaction(transactionData);
+        setTransactions((prev) => [...prev, newTransaction]);
+        return newTransaction;
+      } catch (err) {
+        console.error('Error adding transaction:', err);
+        setError('Failed to add transaction. Please try again later.');
+        return null;
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
   );
 
   const value = {
@@ -82,15 +111,22 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
     fetchTransactions,
     refreshTransactions,
     getTransactionById,
+    addTransaction,
   };
 
-  return <TransactionContext.Provider value={value}>{children}</TransactionContext.Provider>;
+  return (
+    <TransactionContext.Provider value={value}>
+      {children}
+    </TransactionContext.Provider>
+  );
 }
 
 export function useTransactions() {
   const context = useContext(TransactionContext);
   if (context === undefined) {
-    throw new Error('useTransactions must be used within a TransactionProvider');
+    throw new Error(
+      'useTransactions must be used within a TransactionProvider'
+    );
   }
   return context;
 }
