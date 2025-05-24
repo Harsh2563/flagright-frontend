@@ -19,7 +19,7 @@ import {
   TransactionStatus,
 } from '../../types/enums/TransactionEnums';
 import { PaymentMethodType } from '../../types/enums/UserEnums';
-import {  TransactionIcon } from '../../components/ui/icons';
+import { TransactionIcon } from '../../components/ui/icons';
 import { title } from '../../components/ui/primitives';
 import {
   formDataToTransaction,
@@ -31,7 +31,7 @@ import { useUsers } from '../../contexts/UserContext';
 import { ITransaction } from '../../types/transaction';
 import { z } from 'zod';
 import { BackButton } from '../user';
-import { currencies } from '@/helper/helper';
+import { currencies, convertCurrency } from '@/helper/helper';
 
 type TransactionFormType = z.infer<typeof TransactionSchema>;
 
@@ -179,7 +179,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   }));
                 }}
                 errorMessage={validationErrors.transactionType}
-                isRequired
               >
                 {Object.values(TransactionType).map((type) => (
                   <SelectItem key={type}>
@@ -207,7 +206,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   }));
                 }}
                 errorMessage={validationErrors.status}
-                isRequired
               >
                 {Object.values(TransactionStatus).map((status) => (
                   <SelectItem key={status}>
@@ -215,7 +213,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   </SelectItem>
                 ))}
               </Select>
-
               <Select
                 label="Sender"
                 labelPlacement="outside"
@@ -295,11 +292,29 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                 value={formData.amount.toString() || ''}
                 errorMessage={validationErrors.amount}
                 isInvalid={!!validationErrors.amount}
-                onValueChange={(val) =>
-                  setFormData((p) => ({ ...p, amount: parseFloat(val) || 0 }))
-                }
-              />
+                onValueChange={(val) => {
+                  const newAmount = parseFloat(val) || 0;
+                  setFormData((prev) => {
+                    const updatedData = { ...prev, amount: newAmount };
 
+                    // If destination currency is set, recalculate destination amount
+                    if (
+                      prev.destinationCurrency &&
+                      prev.currency &&
+                      newAmount > 0
+                    ) {
+                      updatedData.destinationAmount = convertCurrency(
+                        newAmount,
+                        prev.currency,
+                        prev.destinationCurrency
+                      );
+                    }
+
+                    return updatedData;
+                  });
+                }}
+                isRequired
+              />
               <Select
                 id="currency"
                 name="currency"
@@ -309,21 +324,41 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                 isInvalid={!!validationErrors.currency}
                 selectedKeys={formData.currency ? [formData.currency] : []}
                 onSelectionChange={(keys) => {
-                  const selectedKey =
+                  const selectedCurrency =
                     keys instanceof Set
                       ? (Array.from(keys)[0] as string)
                       : undefined;
-                  setFormData((prev) => ({
-                    ...prev,
-                    currency: selectedKey || '',
-                  }));
+
+                  setFormData((prev) => {
+                    const updatedData = {
+                      ...prev,
+                      currency: selectedCurrency || '',
+                    };
+
+                    // If destination currency is already set, recalculate destination amount
+                    if (
+                      selectedCurrency &&
+                      prev.destinationCurrency &&
+                      prev.amount > 0
+                    ) {
+                      updatedData.destinationAmount = convertCurrency(
+                        prev.amount,
+                        selectedCurrency,
+                        prev.destinationCurrency
+                      );
+                    }
+
+                    return updatedData;
+                  });
                 }}
                 errorMessage={validationErrors.currency}
                 isRequired
               >
-                {currencies.map((currency) => (
-                  <SelectItem key={currency}>{currency}</SelectItem>
-                ))}
+                <>
+                  {currencies.map((currency) => (
+                    <SelectItem key={currency}>{currency}</SelectItem>
+                  ))}
+                </>
               </Select>
 
               <Select
@@ -339,20 +374,40 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                     : []
                 }
                 onSelectionChange={(keys) => {
-                  const selectedKey =
+                  const selectedCurrency =
                     keys instanceof Set
                       ? (Array.from(keys)[0] as string)
                       : undefined;
-                  setFormData((prev) => ({
-                    ...prev,
-                    destinationCurrency: selectedKey || '',
-                  }));
+
+                  // Update the form data with the new currency and calculate destination amount
+                  setFormData((prev) => {
+                    const updatedData = {
+                      ...prev,
+                      destinationCurrency: selectedCurrency || '',
+                    };
+
+                    // If both currencies are selected and amount is provided, calculate destination amount
+                    if (selectedCurrency && prev.currency && prev.amount > 0) {
+                      updatedData.destinationAmount = convertCurrency(
+                        prev.amount,
+                        prev.currency,
+                        selectedCurrency
+                      );
+                    } else if (!selectedCurrency) {
+                      // If no destination currency is selected, clear the destination amount
+                      updatedData.destinationAmount = undefined;
+                    }
+
+                    return updatedData;
+                  });
                 }}
                 errorMessage={validationErrors.destinationCurrency}
               >
-                {currencies.map((currency) => (
-                  <SelectItem key={currency}>{currency}</SelectItem>
-                ))}
+                <>
+                  {currencies.map((currency) => (
+                    <SelectItem key={currency}>{currency}</SelectItem>
+                  ))}
+                </>
               </Select>
 
               <Input
@@ -360,7 +415,11 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                 name="destinationAmount"
                 label="Destination Amount"
                 labelPlacement="outside"
-                placeholder="Enter destination amount"
+                placeholder={
+                  formData.destinationCurrency
+                    ? 'Auto-calculated based on exchange rate'
+                    : 'Select destination currency first'
+                }
                 isInvalid={!!validationErrors.destinationAmount}
                 value={formData.destinationAmount?.toString() || ''}
                 onValueChange={(val) =>
@@ -369,10 +428,12 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                     destinationAmount: parseFloat(val) || 0,
                   }))
                 }
+                isDisabled={true}
+                isReadOnly={true}
                 errorMessage={validationErrors.destinationAmount}
               />
 
-              <div className='col-span-1 md:col-span-2'>
+              <div className="col-span-1 md:col-span-2">
                 <Select
                   id="paymentMethod"
                   name="paymentMethod"
@@ -404,7 +465,7 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   ))}
                 </Select>
               </div>
-
+              
               <div className="col-span-1 md:col-span-2">
                 <Input
                   id="description"
