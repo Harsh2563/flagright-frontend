@@ -7,7 +7,7 @@ import {
 
 const GeolocationSchema = z.object({
   country: z.string().optional(),
-  city: z.string().optional(),
+  state: z.string().optional(),
 });
 
 const DeviceInfoSchema = z.object({
@@ -44,7 +44,6 @@ export const TransactionSchema = z.object({
   deviceInfo: DeviceInfoSchema.optional(),
   paymentMethod: z.nativeEnum(PaymentMethodType).optional(),
 });
-
 
 export const TransactionFormSchema = z.object({
   id: z.string().uuid('Invalid transaction ID format').optional(),
@@ -84,7 +83,9 @@ export const TransactionFormSchema = z.object({
 
 export type TransactionFormType = z.infer<typeof TransactionFormSchema>;
 
-export const formDataToTransaction = (formData: TransactionFormType): TransactionSchemaType => {
+export const formDataToTransaction = (
+  formData: TransactionFormType
+): TransactionSchemaType => {
   return {
     id: formData.id,
     transactionType: formData.transactionType,
@@ -102,9 +103,9 @@ export const formDataToTransaction = (formData: TransactionFormType): Transactio
       ipAddress: formData.deviceInfo?.ipAddress,
       geolocation: {
         country: formData.deviceInfo?.geolocation?.country,
-        city: formData.deviceInfo?.geolocation?.city,
+        state: formData.deviceInfo?.geolocation?.state,
       },
     },
     paymentMethod: formData.paymentMethod,
   };
-} 
+};

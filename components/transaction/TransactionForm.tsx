@@ -17,6 +17,7 @@ import {
 import {
   TransactionType,
   TransactionStatus,
+  DeviceID,
 } from '../../types/enums/TransactionEnums';
 import { PaymentMethodType } from '../../types/enums/UserEnums';
 import { TransactionIcon } from '../../components/ui/icons';
@@ -31,7 +32,8 @@ import { useUsers } from '../../contexts/UserContext';
 import { ITransaction } from '../../types/transaction';
 import { z } from 'zod';
 import { BackButton } from '../user';
-import { currencies, convertCurrency } from '@/helper/helper';
+import { currencies, convertCurrency, isValidIpAddress } from '@/helper/helper';
+import { Country, State } from 'country-state-city';
 
 type TransactionFormType = z.infer<typeof TransactionSchema>;
 
@@ -53,6 +55,13 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
     timestamp: new Date().toISOString(),
     description: '',
     paymentMethod: PaymentMethodType.BANK_ACCOUNT,
+    deviceInfo: {
+      ipAddress: '',
+      geolocation: {
+        country: '',
+        state: '',
+      },
+    },
   });
 
   const getUsernameFromId = (userId: string) => {
@@ -77,6 +86,66 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
   const [validationErrors, setValidationErrors] = useState<ValidationErrors>(
     {}
   );
+  // Geolocation state management for device info
+  const [countries, setCountries] = useState<any[]>([]);
+  const [states, setStates] = useState<any[]>([]);
+
+  // Helper function to ensure deviceInfo has proper structure
+  const getDeviceInfo = (deviceInfo: any) => ({
+    ipAddress: deviceInfo?.ipAddress || '',
+    geolocation: {
+      country: deviceInfo?.geolocation?.country || '',
+      state: deviceInfo?.geolocation?.state || '',
+    },
+  });
+
+  // Initialize countries list
+  useEffect(() => {
+    setCountries(Country.getAllCountries());
+  }, []);
+
+  // Update states when country changes
+  useEffect(() => {
+    if (formData.deviceInfo?.geolocation?.country) {
+      const countryStates = State.getStatesOfCountry(
+        formData.deviceInfo.geolocation.country
+      );
+      setStates(countryStates);
+      setFormData((prev) => ({
+        ...prev,
+        deviceInfo: {
+          ...getDeviceInfo(prev.deviceInfo),
+          geolocation: {
+            ...getDeviceInfo(prev.deviceInfo).geolocation,
+            country: prev.deviceInfo?.geolocation?.country || '',
+            state: '',
+          },
+        },
+      }));
+    }
+  }, [formData.deviceInfo?.geolocation?.country]);
+
+  // Update cities when state changes
+  useEffect(() => {
+    if (
+      formData.deviceInfo?.geolocation?.state &&
+      formData.deviceInfo?.geolocation?.country
+    ) {
+      setFormData((prev) => ({
+        ...prev,
+        deviceInfo: {
+          ...getDeviceInfo(prev.deviceInfo),
+          geolocation: {
+            ...getDeviceInfo(prev.deviceInfo).geolocation,
+            state: prev.deviceInfo?.geolocation?.state || '',
+          },
+        },
+      }));
+    }
+  }, [
+    formData.deviceInfo?.geolocation?.state,
+    formData.deviceInfo?.geolocation?.country,
+  ]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -480,6 +549,168 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   }
                   errorMessage={validationErrors.description}
                 />
+              </div>
+              <div className="col-span-1 md:col-span-2">
+                <Select
+                  id="deviceId"
+                  name="deviceId"
+                  label="Device ID"
+                  labelPlacement="outside"
+                  placeholder="Select device ID"
+                  isInvalid={!!validationErrors.deviceId}
+                  selectedKeys={formData.deviceId ? [formData.deviceId] : []}
+                  onSelectionChange={(keys) => {
+                    const selectedKey =
+                      keys instanceof Set
+                        ? (Array.from(keys)[0] as DeviceID)
+                        : undefined;
+                    setFormData((prev) => ({
+                      ...prev,
+                      deviceId: selectedKey || DeviceID.ANDROID,
+                    }));
+                  }}
+                  errorMessage={validationErrors.deviceId}
+                >
+                  {Object.values(DeviceID).map((method) => (
+                    <SelectItem key={method}>
+                      {method.replace('_', ' ').charAt(0).toUpperCase() +
+                        method.replace('_', ' ').slice(1)}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>{' '}
+
+              {/* IP Address Field */}
+              <div className="col-span-1 md:col-span-2">
+                <Input
+                  id="ipAddress"
+                  name="ipAddress"
+                  label="IP Address"
+                  labelPlacement="outside"
+                  placeholder="Enter IP address (IPv4 or IPv6)"
+                  isInvalid={!!validationErrors.deviceInfo?.ipAddress}
+                  value={formData.deviceInfo?.ipAddress || ''}
+                  onValueChange={(val) => {
+                    setFormData((prev) => ({
+                      ...prev,
+                      deviceInfo: {
+                        ...getDeviceInfo(prev.deviceInfo),
+                        ipAddress: val,
+                      },
+                    }));
+                  }}
+                  onBlur={(e) => {
+                    const ipAddress = e.target.value;
+                    if (ipAddress && !isValidIpAddress(ipAddress)) {
+                      setValidationErrors((prev) => ({
+                        ...prev,
+                        deviceInfo: {
+                          ...((prev.deviceInfo as any) || {}),
+                          ipAddress: 'Please enter a valid IP address',
+                        },
+                      }));
+                    } else {
+                      setValidationErrors((prev) => ({
+                        ...prev,
+                        deviceInfo: {
+                          ...((prev.deviceInfo as any) || {}),
+                          ipAddress: undefined,
+                        },
+                      }));
+                    }
+                  }}
+                  errorMessage={validationErrors.deviceInfo?.ipAddress}
+                />
+              </div>
+
+              {/* Country Field */}
+              <div className="col-span-1 md:col-span-2">
+                <Select
+                  id="country"
+                  name="country"
+                  label="Country"
+                  labelPlacement="outside"
+                  placeholder="Select country"
+                  isInvalid={
+                    !!validationErrors.deviceInfo?.geolocation?.country
+                  }
+                  selectedKeys={
+                    formData.deviceInfo?.geolocation?.country
+                      ? [formData.deviceInfo.geolocation.country]
+                      : []
+                  }
+                  onSelectionChange={(keys) => {
+                    const selectedCountry =
+                      keys instanceof Set
+                        ? (Array.from(keys)[0] as string)
+                        : undefined;
+                    setFormData((prev) => ({
+                      ...prev,
+                      deviceInfo: {
+                        ...getDeviceInfo(prev.deviceInfo),
+                        geolocation: {
+                          ...getDeviceInfo(prev.deviceInfo).geolocation,
+                          country: selectedCountry || '',
+                          state: '',
+                        },
+                      },
+                    }));
+
+                    // Update states and cities based on selected country
+                    if (selectedCountry) {
+                      const countryStates =
+                        State.getStatesOfCountry(selectedCountry);
+                      setStates(countryStates);
+                    } else {
+                      setStates([]);
+                    }
+                  }}
+                  errorMessage={
+                    validationErrors.deviceInfo?.geolocation?.country
+                  }
+                >
+                  {countries.map((country) => (
+                    <SelectItem key={country.isoCode}>
+                      {country.name}
+                    </SelectItem>
+                  ))}
+                </Select>
+              </div>
+              <div className="col-span-1 md:col-span-2">
+                <Select
+                  id="state"
+                  name="state"
+                  label="State"
+                  labelPlacement="outside"
+                  placeholder="Select state"
+                  isInvalid={!!validationErrors.deviceInfo?.geolocation?.state}
+                  selectedKeys={
+                    formData.deviceInfo?.geolocation?.state
+                      ? [formData.deviceInfo.geolocation.state]
+                      : []
+                  }
+                  onSelectionChange={(keys) => {
+                    const selectedState =
+                      keys instanceof Set
+                        ? (Array.from(keys)[0] as string)
+                        : undefined;
+                    setFormData((prev) => ({
+                      ...prev,
+                      deviceInfo: {
+                        ...getDeviceInfo(prev.deviceInfo),
+                        geolocation: {
+                          ...getDeviceInfo(prev.deviceInfo).geolocation,
+                          state: selectedState || '',
+                        },
+                      },
+                    }));
+                  }}
+                  errorMessage={validationErrors.deviceInfo?.geolocation?.state}
+                >
+                  {states.map((state) => (
+                    <SelectItem key={state.name}>{state.name}</SelectItem>
+                  ))}
+                </Select>
               </div>
             </div>
 
