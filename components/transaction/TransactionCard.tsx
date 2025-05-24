@@ -8,6 +8,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from '../../types/enums/TransactionEnums';
+import { useUsers } from '../../contexts/UserContext';
 
 interface TransactionCardProps {
   transaction: ITransaction;
@@ -59,6 +60,18 @@ const getTransactionTypeLabel = (type: TransactionType) => {
 export const TransactionCard: React.FC<TransactionCardProps> = ({
   transaction,
 }) => {
+  const { getUserById } = useUsers();
+
+  // Get user names for display
+  const sender = getUserById(transaction.senderId);
+  const receiver = getUserById(transaction.receiverId);
+
+  const senderName = sender
+    ? `${sender.firstName} ${sender.lastName}`
+    : 'Unknown';
+  const receiverName = receiver
+    ? `${receiver.firstName} ${receiver.lastName}`
+    : 'Unknown';
   return (
     <Card className="w-full">
       <CardBody className="p-4">
@@ -88,13 +101,19 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
               {transaction.status}
             </Chip>
           </div>
-
+          
           <div className="mt-2">
             <p className="text-sm text-default-500">
-              <span className="font-medium">From:</span> {transaction.senderId}
+              <span className="font-medium">From:</span> {senderName}
+              <span className="text-xs text-default-400 ml-1">
+                ({transaction.senderId})
+              </span>
             </p>
             <p className="text-sm text-default-500">
-              <span className="font-medium">To:</span> {transaction.receiverId}
+              <span className="font-medium">To:</span> {receiverName}
+              <span className="text-xs text-default-400 ml-1">
+                ({transaction.receiverId})
+              </span>
             </p>
             {transaction.paymentMethod && (
               <p className="text-sm text-default-500">
