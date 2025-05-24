@@ -16,21 +16,22 @@ import {
 } from '@heroui/react';
 import { Country, State, City } from 'country-state-city';
 import { PaymentMethodType } from '../../types/enums/UserEnums';
-import { UsersIcon } from '../../components/ui/icons';
+import {  UsersIcon } from '../../components/ui/icons';
 import { title } from '../../components/ui/primitives';
 import {
   UserFormType,
   formDataToUser,
   UserFormSchema,
 } from '../../schemas/userSchema';
-import { ValidationErrors } from '../../types/error';
+import { UserValidationErrors as ValidationErrors } from '../../types/error';
 import { useUsers } from '../../contexts/UserContext';
+import { BackButton } from './BackButton';
 
 export default function UserForm({ id = undefined }: { id?: string }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { addUser, getUserById, updateUser } = useUsers();
+  const { addUser, getUserById } = useUsers();
 
   const [formData, setFormData] = useState<UserFormType>({
     id: id,
@@ -107,7 +108,6 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
     // Validate form data against the schema
     const validationResult = UserFormSchema.safeParse(formData);
-    console.log(typeof id);
 
     if (!validationResult.success) {
       console.log('Validation errors:', validationResult.error.errors);
@@ -158,24 +158,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
   return (
     <section className="container mx-auto px-4 py-8">
-      <Button
-        variant="light"
-        color="default"
-        className="mb-4 flex items-center gap-2"
-        onClick={() => router.back()}
-      >
-        <svg
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          fill="none"
-          strokeWidth="2"
-        >
-          <path d="M19 12H5M12 19l-7-7 7-7" />
-        </svg>
-        Back to Users
-      </Button>
+      <BackButton content="Back to Users" onBack={() => router.back()} />
 
       <div className="flex items-center gap-4 mb-6">
         <div className="p-2 bg-primary/10 rounded-full">

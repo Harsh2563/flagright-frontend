@@ -5,9 +5,10 @@ import { IUser } from '../../types/user';
 
 interface BackButtonProps {
   onBack: () => void;
+  content: string;
 }
 
-export function BackButton({ onBack }: BackButtonProps) {
+export function BackButton({ onBack, content }: BackButtonProps) {
   return (
     <Button
       variant="light"
@@ -25,7 +26,7 @@ export function BackButton({ onBack }: BackButtonProps) {
       >
         <path d="M19 12H5M12 19l-7-7 7-7" />
       </svg>
-      Back to Users
+      {content}
     </Button>
   );
 }

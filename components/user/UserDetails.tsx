@@ -28,7 +28,7 @@ export function UserDetails({
 }: UserDetailsProps) {
   return (
     <>
-      <BackButton onBack={onBack} />
+      <BackButton onBack={onBack} content='Back to Users' />
       <UserHeader user={user} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <PersonalInfoCard user={user} />

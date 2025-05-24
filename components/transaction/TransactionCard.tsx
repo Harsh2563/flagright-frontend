@@ -135,7 +135,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
         </Button>
         <Button
           as={Link}
-          href={`users/add-transaction/${transaction.id}`}
+          href={`transactions/add-transaction/${transaction.id}`}
           color="secondary"
           variant="flat"
           size="sm"
