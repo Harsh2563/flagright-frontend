@@ -1,7 +1,7 @@
 'use client';
 
-import { title, subtitle } from '../../components/ui/primitives';
-import { TransactionIcon } from '../../components/ui/icons';
+import { title, subtitle } from '../ui/primitives';
+import { TransactionIcon } from '../ui/icons';
 import { ITransaction } from '../../types/transaction';
 import { Chip } from '@heroui/chip';
 import { getStatusColor, getTransactionTypeLabel } from './TransactionDetails';

@@ -1,5 +1,6 @@
-import { ITransaction } from "./transaction";
-import { IUser } from "./user";
+import { TransactionType } from './enums/TransactionEnums';
+import { ITransaction } from './transaction';
+import { IUser } from './user';
 
 export interface IUserRelationshipData {
   relationshipType: string;
@@ -28,4 +29,42 @@ export interface IUserRelationshipGraphProps {
     | null;
   isLoading?: boolean;
   centerUserId?: string;
+}
+
+export interface ITransactionResponseUser {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+}
+
+export interface ITransactionResponseTransaction {
+  id: string;
+  amount: number;
+  currency: string;
+  timestamp: string;
+  transactionType: TransactionType;
+  status: string;
+  deviceId: string | null;
+}
+
+export interface ITransactionRelationshipData {
+  relationshipType: 'SHARED_DEVICE' | 'SHARED_IP';
+  transaction: ITransactionResponseTransaction;
+}
+
+export interface ITransactionRelationshipGraphResponse {
+  status: string;
+  data: {
+    sender: ITransactionResponseUser;
+    receiver: ITransactionResponseUser;
+    sharedDeviceTransactions: ITransactionRelationshipData[];
+    sharedIPTransactions: ITransactionRelationshipData[];
+  };
+}
+
+export interface ITransactionRelationshipGraphProps {
+  relationships: ITransactionRelationshipGraphResponse | null;
+  isLoading?: boolean;
+  centerTransactionId?: string;
 }

@@ -75,7 +75,6 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
 }) => {
   return (
     <div className="space-y-6">
-      <TransactionHeader transaction={transaction} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <Card className="lg:col-span-1 shadow-md hover:shadow-lg transition-shadow border-none dark:bg-default-50/10">
           <CardHeader className="bg-gradient-to-r from-primary-50/50 to-primary-100/50 dark:from-primary-600/20 dark:to-primary-700/10">
