@@ -42,7 +42,7 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addTransaction, getTransactionById } = useTransactions();
-  const { users, loading: usersLoading } = useUsers();
+  const { users, loading: usersLoading, getUserById } = useUsers();
 
   const [formData, setFormData] = useState<TransactionFormType>({
     id: id,
@@ -63,11 +63,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
       },
     },
   });
-
-  const getUsernameFromId = (userId: string) => {
-    const user = users.find((u) => u.id === userId);
-    return user ? `${user.firstName} ${user.lastName}` : '';
-  };
 
   // Load existing transaction data if id is provided
   useEffect(() => {
@@ -290,7 +285,8 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                 renderValue={() => {
                   return formData.senderId ? (
                     <div className="flex items-center gap-2">
-                      {getUsernameFromId(formData.senderId)}
+                      {getUserById(formData.senderId)?.firstName}{' '}
+                      {getUserById(formData.senderId)?.lastName}
                     </div>
                   ) : null;
                 }}
@@ -325,7 +321,8 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                 renderValue={() => {
                   return formData.receiverId ? (
                     <div className="flex items-center gap-2">
-                      {getUsernameFromId(formData.receiverId)}
+                      {getUserById(formData.receiverId)?.firstName}{' '}
+                      {getUserById(formData.receiverId)?.lastName}
                     </div>
                   ) : null;
                 }}

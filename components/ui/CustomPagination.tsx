@@ -11,12 +11,19 @@ export const CustomPagination: React.FC<ICustomPaginationProps> = ({
   isDisabled = false,
   limit = 10,
 }) => {
-  const { currentPage, totalPages, totalUsers, hasNextPage, hasPreviousPage } =
-    pagination;
+  const { currentPage, totalPages, hasNextPage, hasPreviousPage } = pagination;
+
+  // Get the total items count (users or transactions)
+  const totalResponses =
+    'totalUsers' in pagination
+      ? pagination.totalUsers
+      : 'totalTransactions' in pagination
+        ? pagination.totalTransactions
+        : 0;
 
   // Calculate the range of users being displayed
-  const startUser = Math.min((currentPage - 1) * limit + 1, totalUsers);
-  const endUser = Math.min(currentPage * limit, totalUsers);
+  const startPage = Math.min((currentPage - 1) * limit + 1, totalResponses);
+  const endPage = Math.min(currentPage * limit, totalResponses);
 
   // Generate page numbers to display
   const getPageNumbers = () => {
@@ -62,7 +69,7 @@ export const CustomPagination: React.FC<ICustomPaginationProps> = ({
     return (
       <div className="flex items-center justify-between">
         <span className="text-sm text-default-500">
-          Showing {startUser} - {endUser} of {totalUsers} users
+          Showing {startPage} - {endPage} of {totalResponses} items
         </span>
       </div>
     );
@@ -71,7 +78,7 @@ export const CustomPagination: React.FC<ICustomPaginationProps> = ({
   return (
     <div className="flex items-center justify-between">
       <span className="text-sm text-default-500">
-        Showing {startUser} - {endUser} of {totalUsers} users
+        Showing {startPage} - {endPage} of {totalResponses} items
       </span>
 
       <div className="flex items-center gap-1">
