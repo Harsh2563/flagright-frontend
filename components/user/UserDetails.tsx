@@ -6,7 +6,7 @@ import { AddressCard } from './AddressCard';
 import { PaymentMethodsCard } from './PaymentMethodsCard';
 import { BackButton } from './BackButton';
 import { UserRelation } from './UserRelation';
-import { UserRelationshipGraph } from './UserRelationshipGraph.';
+import { UserRelationshipGraph } from './UserRelationshipGraph';
 import { IUser } from '../../types/user';
 import { IUserRelationshipGraphResponse } from '../../types/relationship';
 

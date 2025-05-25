@@ -2,12 +2,20 @@
 
 import { useEffect, useRef, useState } from 'react';
 import cytoscape from 'cytoscape';
-import { Card, CardBody, CardHeader, Divider, Spinner } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Spinner,
+  Button,
+} from '@heroui/react';
+import { GraphIcon, DownloadIcon } from '../ui/icons';
 import {
   IUserRelationshipGraphProps,
   IUserRelationshipGraphResponse,
 } from '@/types/relationship';
-import { GraphIcon } from '../ui/icons';
+import { downloadFile } from '@/helper/helper';
 
 export function UserRelationshipGraph({
   relationships,
@@ -18,11 +26,271 @@ export function UserRelationshipGraph({
   const cyRef = useRef<cytoscape.Core | null>(null);
   const [graphEmpty, setGraphEmpty] = useState<boolean>(false);
 
+  // Function to export graph data in CSV format
+  const exportToCSV = () => {
+    if (
+      !relationships ||
+      (Array.isArray(relationships) && relationships.length === 0)
+    ) {
+      alert('No relationship data available to export.');
+      return;
+    }
+
+    try {
+      const relationshipsArray = Array.isArray(relationships)
+        ? relationships
+        : [relationships];
+      if (relationshipsArray.length === 0 || !relationshipsArray[0]?.data) {
+        alert('No relationship data available to export.');
+        return;
+      }
+
+      const centerId =
+        centerUserId || `center-user-${new Date().toISOString()}`;
+      const fileName = `user-relationships-${centerId.substring(0, 8)}-${new Date().toISOString()}.csv`;
+
+      // Prepare CSV data
+      const headers = [
+        'NodeID',
+        'NodeType',
+        'NodeLabel',
+        'ConnectedTo',
+        'RelationshipType',
+        'Details',
+      ];
+
+      // Create a mapping of node IDs to their labels
+      const nodeLabels: { [key: string]: string } = {};
+      const rows: string[][] = [];
+
+      // Process relationships to build node labels and rows
+      relationshipsArray.forEach((relationship, relationshipIndex) => {
+        const data = relationship?.data;
+        if (!data) return;
+
+        const centerUserIdToUse = centerUserId || `center-${relationshipIndex}`;
+        const centerLabel = 'Center User';
+        nodeLabels[centerUserIdToUse] = centerLabel;
+
+        // Process direct relationships
+        if (data.directRelationships?.length) {
+          data.directRelationships.forEach((rel, index) => {
+            const userId = rel.user.id || `direct-user-${index}`;
+            const userDisplayName =
+              rel.user.firstName ||
+              rel.user.email ||
+              `User ${userId.substring(0, 8)}`;
+            nodeLabels[userId] = userDisplayName;
+
+            const relationshipType = rel.relationshipType || 'Direct';
+            rows.push([
+              userId,
+              'user',
+              userDisplayName,
+              centerLabel,
+              'direct',
+              `Direct relationship: ${relationshipType}`,
+            ]);
+          });
+        }
+
+        // Process transaction relationships
+        if (data.transactionRelationships?.length) {
+          data.transactionRelationships.forEach((rel, index) => {
+            const userId = rel.user.id || `trans-user-${index}`;
+            const userDisplayName =
+              rel.user.firstName ||
+              rel.user.email ||
+              `User ${userId.substring(0, 8)}`;
+            nodeLabels[userId] = userDisplayName;
+
+            const relationshipType = rel.relationshipType || 'Transaction';
+            let details = `Transaction relationship: ${relationshipType}`;
+
+            // Check for shared device with transaction count
+            if (relationshipType.startsWith('SHARED_DEVICE')) {
+              const match = relationshipType.match(/\((\d+) transactions\)/);
+              const transCount = match ? match[1] : 'unknown';
+              details = `Shared device with ${transCount} transactions`;
+            }
+
+            rows.push([
+              userId,
+              'user',
+              userDisplayName,
+              centerLabel,
+              'transaction',
+              details,
+            ]);
+          });
+        }
+
+        // Process sent transactions
+        if (data.sentTransactions?.length) {
+          data.sentTransactions.forEach((tranData, index) => {
+            const userId = tranData.relatedUser.id || `sent-user-${index}`;
+            const userDisplayName =
+              tranData.relatedUser.firstName ||
+              tranData.relatedUser.email ||
+              `User ${userId.substring(0, 8)}`;
+            nodeLabels[userId] = userDisplayName;
+
+            const amount = tranData.transaction.amount;
+            const currency = tranData.transaction.currency || '';
+            const amountFormatted =
+              typeof amount === 'number' ? amount.toFixed(2) : String(amount);
+
+            rows.push([
+              centerUserIdToUse,
+              'center',
+              centerLabel,
+              userDisplayName,
+              'sent',
+              `Sent ${amountFormatted} ${currency}`,
+            ]);
+
+            // Add the related user as a standalone node
+            rows.push([
+              userId,
+              'user',
+              userDisplayName,
+              '',
+              '',
+              'Related user (sent transaction)',
+            ]);
+          });
+        }
+
+        // Process received transactions
+        if (data.receivedTransactions?.length) {
+          data.receivedTransactions.forEach((tranData, index) => {
+            const userId = tranData.relatedUser.id || `recv-user-${index}`;
+            const userDisplayName =
+              tranData.relatedUser.firstName ||
+              tranData.relatedUser.email ||
+              `User ${userId.substring(0, 8)}`;
+            nodeLabels[userId] = userDisplayName;
+
+            const amount = tranData.transaction.amount;
+            const currency = tranData.transaction.currency || '';
+            const amountFormatted =
+              typeof amount === 'number' ? amount.toFixed(2) : String(amount);
+
+            rows.push([
+              userId,
+              'user',
+              userDisplayName,
+              centerLabel,
+              'received',
+              `Received ${amountFormatted} ${currency}`,
+            ]);
+
+            // Add the related user as a standalone node
+            rows.push([
+              userId,
+              'user',
+              userDisplayName,
+              '',
+              '',
+              'Related user (received transaction)',
+            ]);
+          });
+        }
+
+        // Process shared attributes (combined relationships)
+        const sharedAttributes: Record<string, Set<string>> = {};
+        const processSharedAttributes = () => {
+          if (data.directRelationships?.length) {
+            data.directRelationships.forEach((rel) => {
+              const userId = rel.user.id || `direct-user-${rel.user.id}`;
+              const relationshipType = rel.relationshipType || 'Direct';
+              if (!sharedAttributes[userId]) {
+                sharedAttributes[userId] = new Set<string>();
+              }
+              sharedAttributes[userId].add(relationshipType);
+            });
+          }
+
+          if (data.transactionRelationships?.length) {
+            data.transactionRelationships.forEach((rel) => {
+              const userId = rel.user.id || `trans-user-${rel.user.id}`;
+              const relationshipType = rel.relationshipType || 'Transaction';
+              if (!sharedAttributes[userId]) {
+                sharedAttributes[userId] = new Set<string>();
+              }
+              sharedAttributes[userId].add(relationshipType);
+            });
+          }
+
+          Object.keys(sharedAttributes).forEach((userId) => {
+            const attributes = Array.from(sharedAttributes[userId]);
+            const userDisplayName = nodeLabels[userId];
+
+            // For users with shared email and phone
+            if (
+              attributes.includes('SHARED_EMAIL') &&
+              attributes.includes('SHARED_PHONE')
+            ) {
+              rows.push([
+                userId,
+                'user',
+                userDisplayName,
+                centerLabel,
+                'direct',
+                'Shared email and phone',
+              ]);
+            }
+
+            // For users with shared device (already handled in transaction relationships)
+          });
+        };
+
+        processSharedAttributes();
+      });
+
+      // Remove duplicate rows (e.g., users appearing in multiple relationships)
+      const uniqueRows: string[][] = [];
+      const seenUsers = new Set<string>();
+      rows.forEach((row) => {
+        const nodeId = row[0];
+        const relationshipType = row[4];
+        const connectedTo = row[3];
+        const key = `${nodeId}-${relationshipType}-${connectedTo}`;
+        if (!seenUsers.has(key)) {
+          seenUsers.add(key);
+          uniqueRows.push(row);
+        }
+      });
+
+      // If there are no relationships, skip export
+      if (uniqueRows.length === 0) {
+        alert('No relationships to export.');
+        return;
+      }
+
+      // Convert to CSV
+      const csvContent = [
+        headers.join(','),
+        ...uniqueRows.map((row) =>
+          row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ),
+      ].join('\n');
+
+      // Create and download the file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      downloadFile(blob, fileName);
+    } catch (error) {
+      console.error('Error exporting user graph data to CSV:', error);
+      alert('Failed to export data as CSV. Please try again.');
+    }
+  };
+
   useEffect(() => {
     // Clean up function to destroy cytoscape instance when component unmounts
     return () => {
       if (cyRef.current) {
         cyRef.current.destroy();
+        cyRef.current = null;
       }
     };
   }, []);
@@ -129,7 +397,7 @@ export function UserRelationshipGraph({
           {
             selector: 'edge[type="direct"]',
             style: {
-              'line-color': '#10B981', // Green
+              'line-color': '#10B981',
               'target-arrow-color': '#10B981',
               width: 3.5,
             },
@@ -138,7 +406,7 @@ export function UserRelationshipGraph({
           {
             selector: 'edge[type="transaction"]',
             style: {
-              'line-color': '#F59E0B', // Yellow/Orange
+              'line-color': '#F59E0B',
               'target-arrow-color': '#F59E0B',
               width: 3.5,
             },
@@ -147,7 +415,7 @@ export function UserRelationshipGraph({
           {
             selector: 'edge[type="sent"]',
             style: {
-              'line-color': '#EF4444', // Red
+              'line-color': '#EF4444',
               'target-arrow-color': '#EF4444',
               width: 3.5,
             },
@@ -156,13 +424,12 @@ export function UserRelationshipGraph({
           {
             selector: 'edge[type="received"]',
             style: {
-              'line-color': '#3B82F6', // Blue
+              'line-color': '#3B82F6',
               'target-arrow-color': '#3B82F6',
               width: 3.5,
             },
           },
         ],
-        // Use a more flexible and visually appealing layout
         layout: {
           name: 'cose',
           idealEdgeLength: 150,
@@ -286,6 +553,22 @@ export function UserRelationshipGraph({
               User Relationship Graph
             </h2>
           </div>
+          <Button
+            variant="light"
+            color="primary"
+            size="sm"
+            startContent={<DownloadIcon size={16} />}
+            className="whitespace-nowrap"
+            onPress={exportToCSV}
+            isDisabled={
+              graphEmpty ||
+              !relationships ||
+              (Array.isArray(relationships) && relationships.length === 0)
+            }
+            aria-label="Export graph data as CSV"
+          >
+            Export CSV
+          </Button>
         </CardHeader>
         <Divider />
         <CardBody>
@@ -360,7 +643,6 @@ function processRelationshipsForGraph(
     } else {
       // Determine center user from data (first relationship's "from" user)
       if (data.directRelationships?.[0]?.user) {
-        // Just using a placeholder ID for the center user as it's not provided in the data
         const placeholderId = `center-${relationshipIndex}`;
         centerUser = {
           data: {
@@ -383,7 +665,6 @@ function processRelationshipsForGraph(
         // Add the related user
         const userId = rel.user.id || `direct-user-${index}`;
         if (!nodeIds.has(userId)) {
-          // Get the user's display name from available properties
           const userDisplayName =
             rel.user.firstName ||
             rel.user.email ||
@@ -426,7 +707,6 @@ function processRelationshipsForGraph(
         // Add the related user
         const userId = rel.user.id || `trans-user-${index}`;
         if (!nodeIds.has(userId)) {
-          // Get the user's display name from available properties
           const userDisplayName =
             rel.user.firstName ||
             rel.user.email ||
@@ -469,7 +749,6 @@ function processRelationshipsForGraph(
         // Add the related user
         const userId = tranData.relatedUser.id || `sent-user-${index}`;
         if (!nodeIds.has(userId)) {
-          // Get the user's display name from available properties
           const userDisplayName =
             tranData.relatedUser.firstName ||
             tranData.relatedUser.email ||
@@ -513,7 +792,6 @@ function processRelationshipsForGraph(
         // Add the related user
         const userId = tranData.relatedUser.id || `recv-user-${index}`;
         if (!nodeIds.has(userId)) {
-          // Get the user's display name from available properties
           const userDisplayName =
             tranData.relatedUser.firstName ||
             tranData.relatedUser.email ||

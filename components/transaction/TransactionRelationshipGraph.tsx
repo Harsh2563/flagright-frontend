@@ -15,6 +15,7 @@ import {
   ITransactionRelationshipGraphResponse,
 } from '@/types/relationship';
 import { GraphIcon, DownloadIcon } from '../ui/icons';
+import { downloadFile } from '@/helper/helper';
 
 export function TransactionRelationshipGraph({
   relationships,
@@ -218,19 +219,6 @@ export function TransactionRelationshipGraph({
       console.error('Error exporting transaction graph data to CSV:', error);
       alert('Failed to export data as CSV. Please try again.');
     }
-  };
-
-  // Helper function to handle file download
-  const downloadFile = (blob: Blob, fileName: string) => {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = fileName;
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
   };
 
   useEffect(() => {

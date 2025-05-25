@@ -174,10 +174,22 @@ export const isValidIpAddress = (ip: string): boolean => {
   return ipv4Regex.test(ip) || ipv6Regex.test(ip);
 };
 
-
 export const validateAndFormatIpAddress = (ip: string): string | null => {
   if (!isValidIpAddress(ip)) {
     return null;
   }
   return ip.trim();
+};
+
+// Helper function to handle file download
+export const downloadFile = (blob: Blob, fileName: string) => {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = fileName;
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
 };
