@@ -10,11 +10,13 @@ import React, {
 import { IUser } from '../types/user';
 import { getUsers, handleUser } from '../services/userService';
 import { UserSchemaType } from '../schemas/userSchema';
+import { IPaginationUser } from '@/types/pagination';
 
 interface UserContextType {
   users: IUser[];
   loading: boolean;
   error: string | null;
+  pagination: IPaginationUser; 
   fetchUsers: () => Promise<void>;
   addUser: (userData: UserSchemaType) => Promise<IUser | null>;
   refreshUsers: () => Promise<void>;
@@ -25,6 +27,13 @@ const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: ReactNode }) {
   const [users, setUsers] = useState<IUser[]>([]);
+  const [pagination, setPagination] = useState<IPaginationUser>({
+    currentPage: 1,
+    totalPages: 1,
+    totalUsers: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState<boolean>(false);
@@ -37,8 +46,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getUsers();
-      setUsers(data);
+      const {users, pagination} = await getUsers();
+      setUsers(users);
+      setPagination(pagination);
       setInitialized(true);
     } catch (err) {
       console.error('Error fetching users:', err);
@@ -76,8 +86,9 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getUsers();
-      setUsers(data);
+      const {users, pagination} = await getUsers();
+      setUsers(users);
+      setPagination(pagination);
     } catch (err) {
       console.error('Error refreshing users:', err);
       setError('Failed to refresh users. Please try again later.');
@@ -106,6 +117,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
     error,
     fetchUsers,
     addUser,
+    pagination,
     refreshUsers,
     getUserById,
   };
