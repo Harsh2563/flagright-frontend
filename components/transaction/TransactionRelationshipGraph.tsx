@@ -2,12 +2,19 @@
 
 import { useEffect, useRef, useState } from 'react';
 import cytoscape from 'cytoscape';
-import { Card, CardBody, CardHeader, Divider, Spinner } from '@heroui/react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Divider,
+  Spinner,
+  Button,
+} from '@heroui/react';
 import {
   ITransactionRelationshipGraphProps,
   ITransactionRelationshipGraphResponse,
 } from '@/types/relationship';
-import { GraphIcon } from '../ui/icons';
+import { GraphIcon, DownloadIcon } from '../ui/icons';
 
 export function TransactionRelationshipGraph({
   relationships,
@@ -17,6 +24,214 @@ export function TransactionRelationshipGraph({
   const graphContainerRef = useRef<HTMLDivElement>(null);
   const cyRef = useRef<cytoscape.Core | null>(null);
   const [graphEmpty, setGraphEmpty] = useState<boolean>(false);
+
+  // Function to export graph data in CSV format
+  const exportToCSV = () => {
+    if (!relationships?.data) {
+      alert('No relationship data available to export.');
+      return;
+    }
+
+    try {
+      const centerTxId = centerTransactionId || 'center-transaction';
+      const fileName = `transaction-relationships-${centerTxId.substring(0, 8)}-${new Date().toISOString()}.csv`;
+      const graphData = relationships.data;
+
+      // Prepare CSV data
+      const headers = [
+        'NodeID',
+        'NodeType',
+        'NodeLabel',
+        'ConnectedTo',
+        'RelationshipType',
+        'Details',
+      ];
+
+      // Create a mapping of node IDs to their labels
+      const nodeLabels: { [key: string]: string } = {};
+
+      // Center transaction label
+      const centerTxLabel = `Transaction ${centerTxId.substring(0, 8)}...`;
+      nodeLabels[centerTxId] = centerTxLabel;
+
+      // Sender label
+      if (graphData.sender) {
+        const senderId = graphData.sender.id || 'sender';
+        const senderName =
+          `${graphData.sender.firstName || ''} ${graphData.sender.lastName || ''}`.trim() ||
+          'Sender';
+        nodeLabels[senderId] = senderName;
+      }
+
+      // Receiver label
+      if (graphData.receiver) {
+        const receiverId = graphData.receiver.id || 'receiver';
+        const receiverName =
+          `${graphData.receiver.firstName || ''} ${graphData.receiver.lastName || ''}`.trim() ||
+          'Receiver';
+        nodeLabels[receiverId] = receiverName;
+      }
+
+      // Shared device transaction labels
+      if (graphData.sharedDeviceTransactions?.length) {
+        graphData.sharedDeviceTransactions.forEach(
+          (relationshipData, index) => {
+            const transaction = relationshipData.transaction;
+            const txId = transaction.id || `device-tx-${index}`;
+            const txLabel = `${transaction.amount} ${transaction.currency}`;
+            nodeLabels[txId] = txLabel;
+          }
+        );
+      }
+
+      // Shared IP transaction labels
+      if (graphData.sharedIPTransactions?.length) {
+        graphData.sharedIPTransactions.forEach((relationshipData, index) => {
+          const transaction = relationshipData.transaction;
+          const txId = transaction.id || `ip-tx-${index}`;
+          const txLabel = `${transaction.amount} ${transaction.currency}`;
+          nodeLabels[txId] = txLabel;
+        });
+      }
+
+      const rows: string[][] = [];
+
+      // Add sender relationship
+      if (graphData.sender) {
+        const senderId = graphData.sender.id || 'sender';
+        const senderName = nodeLabels[senderId];
+
+        rows.push([
+          senderId,
+          'user',
+          senderName,
+          centerTxLabel,
+          'flow',
+          'Sends money to center transaction',
+        ]);
+      }
+
+      // Add receiver relationship
+      if (graphData.receiver) {
+        const receiverId = graphData.receiver.id || 'receiver';
+        const receiverName = nodeLabels[receiverId];
+
+        // Add the relationship from center to receiver
+        rows.push([
+          centerTxId,
+          'center',
+          centerTxLabel,
+          receiverName,
+          'flow',
+          'Sends money to receiver',
+        ]);
+
+        // Add receiver as a standalone node
+        rows.push([
+          receiverId,
+          'user',
+          receiverName,
+          '',
+          '',
+          'Transaction receiver',
+        ]);
+      }
+
+      // Add shared device transactions
+      if (graphData.sharedDeviceTransactions?.length) {
+        graphData.sharedDeviceTransactions.forEach(
+          (relationshipData, index) => {
+            const transaction = relationshipData.transaction;
+            const txId = transaction.id || `device-tx-${index}`;
+            const txLabel = nodeLabels[txId];
+
+            // Add the relationship from center to shared device transaction
+            rows.push([
+              centerTxId,
+              'center',
+              centerTxLabel,
+              txLabel,
+              'shared-device',
+              `Shared device: ${transaction.deviceId || 'Unknown'}`,
+            ]);
+
+            // Add the shared device transaction as a standalone node
+            rows.push([
+              txId,
+              'transaction',
+              txLabel,
+              '',
+              '',
+              `Transaction with shared device, timestamp: ${transaction.timestamp}`,
+            ]);
+          }
+        );
+      }
+
+      // Add shared IP transactions
+      if (graphData.sharedIPTransactions?.length) {
+        graphData.sharedIPTransactions.forEach((relationshipData, index) => {
+          const transaction = relationshipData.transaction;
+          const txId = transaction.id || `ip-tx-${index}`;
+          const txLabel = nodeLabels[txId];
+
+          // Add the relationship from center to shared IP transaction
+          rows.push([
+            centerTxId,
+            'center',
+            centerTxLabel,
+            txLabel,
+            'shared-ip',
+            'Shared IP address',
+          ]);
+
+          // Add the shared IP transaction as a standalone node
+          rows.push([
+            txId,
+            'transaction',
+            txLabel,
+            '',
+            '',
+            `Transaction with shared IP, timestamp: ${transaction.timestamp}`,
+          ]);
+        });
+      }
+
+      // If there are no rows (i.e., no relationships), add a message or skip export
+      if (rows.length === 0) {
+        alert('No relationships to export.');
+        return;
+      }
+
+      // Convert to CSV
+      const csvContent = [
+        headers.join(','),
+        ...rows.map((row) =>
+          row.map((cell) => `"${String(cell).replace(/"/g, '""')}"`).join(',')
+        ),
+      ].join('\n');
+
+      // Create and download the file
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      downloadFile(blob, fileName);
+    } catch (error) {
+      console.error('Error exporting transaction graph data to CSV:', error);
+      alert('Failed to export data as CSV. Please try again.');
+    }
+  };
+
+  // Helper function to handle file download
+  const downloadFile = (blob: Blob, fileName: string) => {
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = fileName;
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
 
   useEffect(() => {
     // Clean up function to destroy cytoscape instance when component unmounts
@@ -295,7 +510,19 @@ export function TransactionRelationshipGraph({
             <h2 className="text-xl font-semibold dark:text-white">
               Transaction Relationship Graph
             </h2>
-          </div>
+          </div>{' '}
+          <Button
+            variant="light"
+            color="primary"
+            size="sm"
+            startContent={<DownloadIcon size={16} />}
+            className="whitespace-nowrap"
+            onPress={() => {
+              exportToCSV();
+            }}
+          >
+            Export CSV
+          </Button>
         </CardHeader>
         <Divider />
         <CardBody>
