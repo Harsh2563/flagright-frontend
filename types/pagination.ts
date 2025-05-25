@@ -1,12 +1,12 @@
 export interface IPaginationUser {
   currentPage: number;
-    totalPages: number;
-    totalUsers: number;
-    hasNextPage: boolean;
-    hasPreviousPage: boolean;
+  totalPages: number;
+  totalUsers: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
 }
 
-export interface IPaginationData {
+export interface IPaginationDataUser {
   currentPage: number;
   totalPages: number;
   totalUsers: number;
@@ -14,8 +14,28 @@ export interface IPaginationData {
   hasPreviousPage: boolean;
 }
 
+export interface IPaginationTransaction {
+  currentPage: number;
+  totalPages: number;
+  totalTransactions: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
+export interface IPaginationDataTransaction {
+  currentPage: number;
+  totalPages: number;
+  totalTransactions: number;
+  hasNextPage: boolean;
+  hasPreviousPage: boolean;
+}
+
 export interface ICustomPaginationProps {
-  pagination: IPaginationData;
+  pagination:
+    | IPaginationDataUser
+    | IPaginationDataTransaction
+    | IPaginationUser
+    | IPaginationTransaction;
   onPageChange: (page: number) => void;
   isDisabled?: boolean;
   limit?: number;

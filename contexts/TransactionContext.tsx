@@ -14,6 +14,7 @@ import {
 } from '../services/transactionService';
 import { z } from 'zod';
 import { TransactionSchema } from '../schemas/transactionSchema';
+import { IPaginationTransaction } from '@/types/pagination';
 
 type TransactionSchemaType = z.infer<typeof TransactionSchema>;
 
@@ -21,6 +22,7 @@ interface TransactionContextType {
   transactions: ITransaction[];
   loading: boolean;
   error: string | null;
+  pagination: IPaginationTransaction;
   fetchTransactions: () => Promise<void>;
   refreshTransactions: () => Promise<void>;
   getTransactionById: (id: string) => ITransaction | undefined;
@@ -38,6 +40,13 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState<boolean>(false);
+  const [pagination, setPagination] = useState<IPaginationTransaction>({
+    currentPage: 1,
+    totalPages: 1,
+    totalTransactions: 0,
+    hasNextPage: false,
+    hasPreviousPage: false,
+  });
 
   const fetchTransactions = useCallback(async () => {
     if (initialized && transactions.length > 0) {
@@ -47,8 +56,9 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getTransactions();
-      setTransactions(data);
+      const {transactions, pagination} = await getTransactions();
+      setTransactions(transactions);
+      setPagination(pagination);
       setInitialized(true);
     } catch (err) {
       console.error('Error fetching transactions:', err);
@@ -62,8 +72,9 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const data = await getTransactions();
-      setTransactions(data);
+      const { transactions, pagination } = await getTransactions();
+      setTransactions(transactions);
+      setPagination(pagination);
     } catch (err) {
       console.error('Error refreshing transactions:', err);
       setError('Failed to refresh transactions. Please try again later.');
@@ -108,6 +119,7 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
     transactions,
     loading,
     error,
+    pagination,
     fetchTransactions,
     refreshTransactions,
     getTransactionById,
