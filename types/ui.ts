@@ -1,6 +1,6 @@
 import { SwitchProps } from "@heroui/switch";
 
-export interface ThemeSwitchProps {
+export interface IThemeSwitchProps {
   className?: string;
   classNames?: SwitchProps["classNames"];
 }

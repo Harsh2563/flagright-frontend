@@ -14,7 +14,7 @@ import {
   ITransactionRelationshipGraphProps,
   ITransactionRelationshipGraphResponse,
 } from '@/types/relationship';
-import { GraphIcon, DownloadIcon } from '../ui/icons';
+import { GraphIcon, DownloadIcon } from '../../ui/icons';
 import { downloadFile } from '@/helper/helper';
 
 export function TransactionRelationshipGraph({

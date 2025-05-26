@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import TransactionSearchFilter from '@/components/transaction/TransactionSearchFilter';
 import React, { useCallback, useEffect, useState } from 'react';
 import { ITransaction } from '@/types/transaction';
-import { TransactionFilterState } from '@/types/transactionFilter';
+import { ITransactionFilterState } from '@/types/transaction';
 import { searchTransactions } from '@/services/transactionService';
 import CustomPagination from '@/components/ui/CustomPagination';
 import { useToastMessage } from '@/utils/toast';
@@ -25,7 +25,7 @@ export default function TransactionsPage() {
   const [searchError, setSearchError] = useState<string | null>(null);
   const [pagination, setPagination] = useState(contextPagination);
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [filterState, setFilterState] = useState<TransactionFilterState>({
+  const [filterState, setFilterState] = useState<ITransactionFilterState>({
     filters: {},
     sortBy: 'createdAt',
     sortOrder: 'desc',
@@ -69,7 +69,7 @@ export default function TransactionsPage() {
   useEffect(() => {
     if (isSearchMode) {
       const shouldAutoSearch = ['page', 'limit', 'sortBy', 'sortOrder'].some(
-        (key) => filterState[key as keyof TransactionFilterState] !== undefined
+        (key) => filterState[key as keyof ITransactionFilterState] !== undefined
       );
 
       if (shouldAutoSearch) {

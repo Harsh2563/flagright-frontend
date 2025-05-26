@@ -15,17 +15,17 @@ import {
   Divider,
 } from '@heroui/react';
 import { Country, State, City } from 'country-state-city';
-import { PaymentMethodType } from '../../types/enums/UserEnums';
-import { UsersIcon } from '../../components/ui/icons';
-import { title } from '../../components/ui/primitives';
+import { PaymentMethodType } from '../../../types/enums/UserEnums';
+import { UsersIcon } from '../../ui/icons';
+import { title } from '../../ui/primitives';
 import {
   UserFormType,
   formDataToUser,
   UserFormSchema,
-} from '../../schemas/userSchema';
-import { UserValidationErrors as ValidationErrors } from '../../types/error';
-import { useUsers } from '../../contexts/UserContext';
-import { BackButton } from './BackButton';
+} from '../../../schemas/userSchema';
+import { UserValidationErrors as ValidationErrors } from '../../../types/error';
+import { useUsers } from '../../../contexts/UserContext';
+import { BackButton } from '../../common/BackButton';
 import { useToastMessage } from '@/utils/toast';
 
 export default function UserForm({ id = undefined }: { id?: string }) {

@@ -1,6 +1,6 @@
 'use client';
 
-import { IUserRelationshipGraphResponse } from '../../types/relationship';
+import { IUserRelationshipGraphResponse } from '../../../types/relationship';
 import {
   Card,
   CardBody,
@@ -9,7 +9,7 @@ import {
   Chip,
   Spinner,
 } from '@heroui/react';
-import { ProfileIcon } from '../ui/icons';
+import { ProfileIcon } from '../../ui/icons';
 
 interface UserRelationProps {
   relationships: IUserRelationshipGraphResponse[] | IUserRelationshipGraphResponse | null;

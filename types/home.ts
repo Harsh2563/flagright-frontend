@@ -1,4 +1,4 @@
-export interface HeroSectionProps {
+export interface IHeroSectionProps {
   title: string;
   highlightedTitle: string;
   description: string;
@@ -6,7 +6,7 @@ export interface HeroSectionProps {
 
 
 
-export interface FeatureCardProps {
+export interface IFeatureCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
@@ -16,7 +16,7 @@ export interface FeatureCardProps {
 }
 
 
-export interface CtaCardProps {
+export interface ICtaCardProps {
   title: string;
   description: string;
   buttonText: string;

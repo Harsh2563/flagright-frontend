@@ -17,11 +17,11 @@ import {
 } from '@heroui/react';
 import { Country, State, City } from 'country-state-city';
 import { SearchIcon, FilterIcon, RefreshIcon } from '../ui/icons';
-import { UserFilterState, UserSearchFilters } from '../../types/userFilter';
+import { IUserFilterState, IUserSearchFilters } from '../../types/user';
 
 interface UserSearchFilterProps {
-  filterState: UserFilterState;
-  onFilterChange: (newState: UserFilterState) => void;
+  filterState: IUserFilterState;
+  onFilterChange: (newState: IUserFilterState) => void;
   onSearch: () => void;
   onReset: () => void;
   isLoading?: boolean;
@@ -91,7 +91,7 @@ export const UserSearchFilter: React.FC<UserSearchFilterProps> = ({
     selectedCountry,
     selectedState,
   ]);
-  const handleFilterChange = (key: keyof UserSearchFilters, value: any) => {
+  const handleFilterChange = (key: keyof IUserSearchFilters, value: any) => {
     const newFilters = { ...filterState.filters, [key]: value };
 
     // Update local state for country-state-city dependencies
@@ -113,8 +113,8 @@ export const UserSearchFilter: React.FC<UserSearchFilterProps> = ({
   };
 
   const handleSortChange = (
-    sortBy: UserFilterState['sortBy'],
-    sortOrder: UserFilterState['sortOrder']
+    sortBy: IUserFilterState['sortBy'],
+    sortOrder: IUserFilterState['sortOrder']
   ) => {
     onFilterChange({
       ...filterState,
@@ -335,7 +335,7 @@ export const UserSearchFilter: React.FC<UserSearchFilterProps> = ({
                     variant="flat"
                     onClose={() =>
                       handleFilterChange(
-                        key as keyof UserSearchFilters,
+                        key as keyof IUserSearchFilters,
                         undefined
                       )
                     }

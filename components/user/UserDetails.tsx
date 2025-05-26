@@ -4,9 +4,9 @@ import { UserHeader } from './UserHeader';
 import { PersonalInfoCard } from './PersonalInfoCard';
 import { AddressCard } from './AddressCard';
 import { PaymentMethodsCard } from './PaymentMethodsCard';
-import { BackButton } from './BackButton';
-import { UserRelation } from './UserRelation';
-import { UserRelationshipGraph } from './UserRelationshipGraph';
+import { BackButton } from './../common/BackButton';
+import { UserRelation } from './relation/UserRelation';
+import { UserRelationshipGraph } from './relation/UserRelationshipGraph';
 import { IUser } from '../../types/user';
 import { IUserRelationshipGraphResponse } from '../../types/relationship';
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import { title, subtitle } from '../ui/primitives';
-import { HeroSectionProps } from '@/types/home';
+import { IHeroSectionProps } from '@/types/home';
 
-export const HeroSection: React.FC<HeroSectionProps> = ({
+export const HeroSection: React.FC<IHeroSectionProps> = ({
   title: titleText,
   highlightedTitle,
   description,

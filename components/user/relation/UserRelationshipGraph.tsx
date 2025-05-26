@@ -10,7 +10,7 @@ import {
   Spinner,
   Button,
 } from '@heroui/react';
-import { GraphIcon, DownloadIcon } from '../ui/icons';
+import { GraphIcon, DownloadIcon } from '../../ui/icons';
 import {
   IUserRelationshipGraphProps,
   IUserRelationshipGraphResponse,

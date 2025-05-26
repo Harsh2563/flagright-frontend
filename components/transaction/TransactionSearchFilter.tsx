@@ -16,9 +16,9 @@ import {
 } from '@heroui/react';
 import { SearchIcon, FilterIcon, RefreshIcon } from '../ui/icons';
 import {
-  TransactionFilterState,
-  TransactionSearchFilters,
-} from '../../types/transactionFilter';
+  ITransactionFilterState,
+  ITransactionSearchFilters,
+} from '../../types/transaction';
 import { useUsers } from '@/contexts/UserContext';
 import {
   TransactionStatus,
@@ -29,8 +29,8 @@ import { currencies } from '@/helper/helper';
 import { useToastMessage } from '@/utils/toast';
 
 interface TransactionSearchFiltersProps {
-  filterState: TransactionFilterState;
-  onFilterChange: (newState: TransactionFilterState) => void;
+  filterState: ITransactionFilterState;
+  onFilterChange: (newState: ITransactionFilterState) => void;
   onSearch: () => void;
   onReset: () => void;
   isLoading?: boolean;
@@ -73,7 +73,7 @@ export const TransactionSearchFilter: React.FC<
   }, [filterState.filters.amountMax]);
 
   const handleFilterChange = (
-    key: keyof TransactionSearchFilters,
+    key: keyof ITransactionSearchFilters,
     value: any
   ) => {
     const newFilters = { ...filterState.filters, [key]: value };
@@ -85,8 +85,8 @@ export const TransactionSearchFilter: React.FC<
   };
 
   const handleSortChange = (
-    sortBy: TransactionFilterState['sortBy'],
-    sortOrder: TransactionFilterState['sortOrder']
+    sortBy: ITransactionFilterState['sortBy'],
+    sortOrder: ITransactionFilterState['sortOrder']
   ) => {
     onFilterChange({
       ...filterState,
@@ -295,7 +295,7 @@ export const TransactionSearchFilter: React.FC<
                     variant="flat"
                     onClose={() =>
                       handleFilterChange(
-                        key as keyof TransactionSearchFilters,
+                        key as keyof ITransactionSearchFilters,
                         undefined
                       )
                     }

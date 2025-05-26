@@ -19,10 +19,9 @@ import {
   InfoIcon,
   AnalyticsIcon,
   ExclamationIcon,
-} from '../ui/icons';
-import { UserValidationErrors as ValidationErrors } from '../../types/error';
+} from '../../ui/icons';
 import { useUsers } from '@/contexts/UserContext';
-import { PathActions, PathGraph, PathLegend, UserSelector } from './path';
+import { PathActions, PathGraph, PathLegend, UserSelector } from '../../user/path';
 import { useToastMessage } from '@/utils/toast';
 
 interface ShortestPathFinderProps {

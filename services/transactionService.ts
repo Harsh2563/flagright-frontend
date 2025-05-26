@@ -2,9 +2,9 @@ import { ITransaction } from '@/types/transaction';
 import { IPaginationTransaction } from '@/types/pagination';
 import api from '@/utils/api';
 import {
-  TransactionSearchParams,
-  TransactionSearchResponse,
-} from '@/types/transactionFilter';
+  ITransactionSearchParams,
+  ITransactionSearchResponse,
+} from '@/types/transaction';
 
 export async function getTransactions(): Promise<{
   transactions: ITransaction[];
@@ -43,8 +43,8 @@ export async function handleTransaction(
 }
 
 export async function searchTransactions(
-  params: TransactionSearchParams
-): Promise<TransactionSearchResponse> {
+  params: ITransactionSearchParams
+): Promise<ITransactionSearchResponse> {
   try {
     console.log('Search params received:', params);
 

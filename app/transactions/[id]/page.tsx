@@ -14,7 +14,7 @@ import {
 } from '../../../components/transaction';
 import { LoadingSpinner } from '../../../components/common/LoadingSpinner';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
-import { BackButton } from '../../../components/user/BackButton';
+import { BackButton } from '../../../components/common/BackButton';
 import { getTransactionRelationships } from '../../../services/relationshipService';
 import { useToastMessage } from '@/utils/toast';
 

@@ -18,20 +18,19 @@ import {
   TransactionType,
   TransactionStatus,
   DeviceID,
-} from '../../types/enums/TransactionEnums';
-import { PaymentMethodType } from '../../types/enums/UserEnums';
-import { TransactionIcon } from '../../components/ui/icons';
-import { title } from '../../components/ui/primitives';
+} from '../../../types/enums/TransactionEnums';
+import { PaymentMethodType } from '../../../types/enums/UserEnums';
+import { TransactionIcon } from '../../../components/ui/icons';
+import { title } from '../../../components/ui/primitives';
 import {
   formDataToTransaction,
   TransactionSchema,
-} from '../../schemas/transactionSchema';
-import { TransactionValidationError as ValidationErrors } from '../../types/error';
-import { useTransactions } from '../../contexts/TransactionContext';
-import { useUsers } from '../../contexts/UserContext';
-import { ITransaction } from '../../types/transaction';
+} from '../../../schemas/transactionSchema';
+import { TransactionValidationError as ValidationErrors } from '../../../types/error';
+import { useTransactions } from '../../../contexts/TransactionContext';
+import { useUsers } from '../../../contexts/UserContext';
 import { z } from 'zod';
-import { BackButton } from '../user';
+import { BackButton } from '../../common/BackButton';
 import { currencies, convertCurrency, isValidIpAddress } from '@/helper/helper';
 import { Country, State } from 'country-state-city';
 import { useToastMessage } from '@/utils/toast';

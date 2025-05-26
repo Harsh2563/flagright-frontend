@@ -1,8 +1,8 @@
 'use client';
 
-import { ErrorMessageProps } from "@/types/common";
+import { IErrorMessageProps } from "@/types/common";
 
-export function ErrorMessage({ message }: ErrorMessageProps) {
+export function ErrorMessage({ message }: IErrorMessageProps) {
   return (
     <div className="text-danger text-center py-10">
       {message || 'An error occurred'}

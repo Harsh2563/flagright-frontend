@@ -6,7 +6,7 @@ import {
   IUser,
 } from '../types/user';
 import api from '../utils/api';
-import { UserSearchParams, UserSearchResponse } from '../types/userFilter';
+import { IUserSearchParams, IUserSearchResponse } from '../types/user';
 
 export async function getUsers(): Promise<{
   users: IUser[];
@@ -41,8 +41,8 @@ export async function handleUser(user: UserFormType): Promise<IUser> {
 }
 
 export async function searchUsers(
-  params: UserSearchParams
-): Promise<UserSearchResponse> {
+  params: IUserSearchParams
+): Promise<IUserSearchResponse> {
   try {
     console.log('Search params received:', params);
 

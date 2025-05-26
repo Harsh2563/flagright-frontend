@@ -4,12 +4,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { title, subtitle } from '../../components/ui/primitives';
 import { AddIcon, UsersIcon } from '../../components/ui/icons';
 import { UserCard } from '../../components/user/UserCard';
-import { ShortestPathFinder } from '../../components/user/ShortestPathFinder';
+import { ShortestPathFinder } from '../../components/user/relation/ShortestPathFinder';
 import { useUsers } from '../../contexts/UserContext';
 import { useRouter } from 'next/navigation';
 import { UserSearchFilter } from '../../components/user/UserSearchFilter';
 import { CustomPagination } from '../../components/ui/CustomPagination';
-import { UserFilterState } from '../../types/userFilter';
+import { IUserFilterState } from '../../types/user';
 import { searchUsers } from '../../services/userService';
 import { IUser } from '../../types/user';
 import { useToastMessage } from '@/utils/toast';
@@ -29,7 +29,7 @@ export default function UsersPage() {
   const [searchError, setSearchError] = useState<string | null>(null);
   const [pagination, setPagination] = useState(contextPagination);
   const [isSearchMode, setIsSearchMode] = useState(false);
-  const [filterState, setFilterState] = useState<UserFilterState>({
+  const [filterState, setFilterState] = useState<IUserFilterState>({
     filters: {},
     sortBy: 'createdAt',
     sortOrder: 'desc',

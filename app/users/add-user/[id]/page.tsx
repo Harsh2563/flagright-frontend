@@ -1,5 +1,5 @@
 'use client';
-import UserForm from '@/components/user/UserForm';
+import UserForm from '@/components/user/form/UserForm';
 import { useParams } from 'next/navigation';
 
 export default function UpdateUserPage() {

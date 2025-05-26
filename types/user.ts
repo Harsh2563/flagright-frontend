@@ -49,9 +49,53 @@ export interface IShortestPath {
 }
 
 export interface IShortestPathResponseUser {
-  status: 'success' | 'error'; 
+  status: 'success' | 'error';
   data: {
     path: IShortestPath;
     length: number;
   };
+}
+
+export interface IUserSearchFilters {
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  city?: string;
+  state?: string;
+  country?: string;
+  postalCode?: string;
+  createdAfter?: string;
+  createdBefore?: string;
+}
+
+export interface IUserSearchParams {
+  page?: number;
+  limit?: number;
+  sortBy?: 'firstName' | 'lastName' | 'email' | 'createdAt' | 'updatedAt';
+  sortOrder?: 'asc' | 'desc';
+  filters?: IUserSearchFilters;
+}
+
+export interface IUserSearchResponse {
+  status: string;
+  message: string;
+  data: {
+    users: any[];
+    pagination: {
+      currentPage: number;
+      totalPages: number;
+      totalUsers: number;
+      hasNextPage: boolean;
+      hasPreviousPage: boolean;
+    };
+  };
+}
+
+export interface IUserFilterState {
+  filters: IUserSearchFilters;
+  sortBy: IUserSearchParams['sortBy'];
+  sortOrder: IUserSearchParams['sortOrder'];
+  page: number;
+  limit: number;
 }

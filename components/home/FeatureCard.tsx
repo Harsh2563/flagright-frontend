@@ -2,9 +2,9 @@ import React from 'react';
 import { Card } from '@heroui/card';
 import { button as buttonStyles } from '@heroui/theme';
 import { Link } from '@heroui/link';
-import { FeatureCardProps } from '@/types/home';
+import { IFeatureCardProps } from '@/types/home';
 
-export const FeatureCard: React.FC<FeatureCardProps> = ({
+export const FeatureCard: React.FC<IFeatureCardProps> = ({
   title,
   description,
   icon,

@@ -1,6 +1,6 @@
 'use client';
 
-import { ITransactionRelationshipGraphResponse } from '../../types/relationship';
+import { ITransactionRelationshipGraphResponse } from '../../../types/relationship';
 import {
   Card,
   CardBody,
@@ -14,7 +14,7 @@ import {
   DeviceIcon,
   MapPinIcon,
   ArrowRightIcon,
-} from '../ui/icons';
+} from '../../ui/icons';
 
 interface TransactionRelationProps {
   relationships: ITransactionRelationshipGraphResponse | null;
