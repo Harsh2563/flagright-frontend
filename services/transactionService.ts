@@ -11,7 +11,7 @@ export async function getTransactions(): Promise<{
   pagination: IPaginationTransaction;
 }> {
   try {
-    const response = await api.get('/transactions');
+    const response = await api.get('/transactions', { withCredentials: true });
     const transactions: ITransaction[] =
       response?.data?.data?.transactions || [];
     const pagination: IPaginationTransaction = response?.data?.data
@@ -35,7 +35,9 @@ export async function handleTransaction(
   transaction: any
 ): Promise<ITransaction> {
   try {
-    const response = await api.post('/transactions', transaction);
+    const response = await api.post('/transactions', transaction, {
+      withCredentials: true,
+    });
     const newTransaction: ITransaction = response?.data?.data?.transaction;
 
     return newTransaction;
@@ -89,7 +91,7 @@ export async function searchTransactions(
 
     console.log('Final API URL:', finalUrl);
 
-    const response = await api.get(finalUrl);
+    const response = await api.get(finalUrl, { withCredentials: true });
 
     return response.data;
   } catch (error) {

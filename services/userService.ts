@@ -14,7 +14,7 @@ export async function getUsers(): Promise<{
   pagination: IPaginationUser;
 }> {
   try {
-    const response = await api.get('/users');
+    const response = await api.get('/users', { withCredentials: true });
     const users: IUser[] = response?.data?.data?.users || [];
     const pagination = response?.data?.data?.pagination || {
       currentPage: 1,
@@ -34,7 +34,7 @@ export async function getUsers(): Promise<{
 
 export async function handleUser(user: UserFormType): Promise<IUser> {
   try {
-    const response = await api.post('/users', user);
+    const response = await api.post('/users', user, { withCredentials: true });
     const newUser: IUser = response?.data?.data?.user;
 
     return newUser;
@@ -83,7 +83,7 @@ export async function searchUsers(
 
     console.log('Final API URL:', finalUrl);
 
-    const response = await api.get(finalUrl);
+    const response = await api.get(finalUrl, { withCredentials: true });
 
     return response.data;
   } catch (error) {
@@ -96,7 +96,9 @@ export async function findShortestPath(
   users: IShortestPathUser
 ): Promise<IShortestPathResponseUser> {
   try {
-    const response = await api.post('/users/shortest-path', users);
+    const response = await api.post('/users/shortest-path', users, {
+      withCredentials: true,
+    });
 
     return response.data;
   } catch (error) {

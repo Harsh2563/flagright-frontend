@@ -8,7 +8,9 @@ export async function getUserRelationships(
   userId: string
 ): Promise<IUserRelationshipGraphResponse> {
   try {
-    const response = await api.get(`/relationships/user/${userId}`);
+    const response = await api.get(`/relationships/user/${userId}`, {
+      withCredentials: true,
+    });
     const relationship: IUserRelationshipGraphResponse = response?.data;
 
     return relationship;
@@ -23,7 +25,8 @@ export async function getTransactionRelationships(
 ): Promise<ITransactionRelationshipGraphResponse> {
   try {
     const response = await api.get(
-      `/relationships/transaction/${transactionId}`
+      `/relationships/transaction/${transactionId}`,
+      { withCredentials: true }
     );
     const relationship: ITransactionRelationshipGraphResponse = response?.data;
 
