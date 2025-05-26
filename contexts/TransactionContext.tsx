@@ -15,6 +15,7 @@ import {
 import { z } from 'zod';
 import { TransactionSchema } from '../schemas/transactionSchema';
 import { IPaginationTransaction } from '@/types/pagination';
+import { useToastMessage } from '../utils/toast';
 
 type TransactionSchemaType = z.infer<typeof TransactionSchema>;
 
@@ -47,6 +48,7 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
     hasNextPage: false,
     hasPreviousPage: false,
   });
+  const toast = useToastMessage();
 
   const fetchTransactions = useCallback(async () => {
     if (initialized && transactions.length > 0) {
@@ -62,6 +64,7 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
       setInitialized(true);
     } catch (err) {
       console.error('Error fetching transactions:', err);
+      toast.error('Failed to fetch transactions. Please try again later.');
       setError('Failed to fetch transactions. Please try again later.');
     } finally {
       setLoading(false);

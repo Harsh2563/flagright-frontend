@@ -10,6 +10,7 @@ import { LoadingSpinner } from '../../../components/common/LoadingSpinner';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
 import { getUserRelationships } from '../../../services/relationshipService';
 import { IUserRelationshipGraphResponse } from '../../../types/relationship';
+import { useToastMessage } from '@/utils/toast';
 
 export default function UserDetailPage() {
   const router = useRouter();
@@ -27,6 +28,7 @@ export default function UserDetailPage() {
     useState<IUserRelationshipGraphResponse | null>(null);
   const [relationshipsLoading, setRelationshipsLoading] =
     useState<boolean>(false);
+    const toast = useToastMessage();
 
   useEffect(() => {
     if (userId) {
@@ -54,6 +56,7 @@ export default function UserDetailPage() {
         setRelationships(result);
         console.log('User relationships fetched:', result);
       } catch (err) {
+        toast.error('Failed to fetch user relationships');
         console.error('Failed to fetch user relationships:', err);
       } finally {
         setRelationshipsLoading(false);

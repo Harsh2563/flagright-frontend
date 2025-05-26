@@ -11,6 +11,7 @@ import { IUser } from '../types/user';
 import { getUsers, handleUser } from '../services/userService';
 import { UserSchemaType } from '../schemas/userSchema';
 import { IPaginationUser } from '@/types/pagination';
+import { useToastMessage } from '../utils/toast';
 
 interface UserContextType {
   users: IUser[];
@@ -37,6 +38,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [initialized, setInitialized] = useState<boolean>(false);
+  const toast = useToastMessage();
 
   const fetchUsers = useCallback(async () => {
     if (initialized && users.length > 0) {
@@ -52,6 +54,7 @@ export function UserProvider({ children }: { children: ReactNode }) {
       setInitialized(true);
     } catch (err) {
       console.error('Error fetching users:', err);
+      toast.error('Failed to fetch users. Please try again later.');
       setError('Failed to fetch users. Please try again later.');
     } finally {
       setLoading(false);

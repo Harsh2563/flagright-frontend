@@ -12,6 +12,7 @@ import { CustomPagination } from '../../components/ui/CustomPagination';
 import { UserFilterState } from '../../types/userFilter';
 import { searchUsers } from '../../services/userService';
 import { IUser } from '../../types/user';
+import { useToastMessage } from '@/utils/toast';
 
 export default function UsersPage() {
   const {
@@ -33,8 +34,9 @@ export default function UsersPage() {
     sortBy: 'createdAt',
     sortOrder: 'desc',
     page: 1,
-    limit: 10,
+    limit: 30,
   });
+  const toast = useToastMessage();
 
   const performSearch = useCallback(async () => {
     setIsSearchMode(true);
@@ -58,6 +60,7 @@ export default function UsersPage() {
     } catch (error) {
       console.error('Search error:', error);
       setSearchError('An error occurred while searching users');
+      toast.error('An error occurred while searching users');
       setSearchResults([]);
     } finally {
       setSearchLoading(false);
@@ -80,7 +83,7 @@ export default function UsersPage() {
       sortBy: 'createdAt',
       sortOrder: 'desc',
       page: 1,
-      limit: 10,
+      limit: 30,
     });
     setIsSearchMode(false);
     setSearchResults([]);

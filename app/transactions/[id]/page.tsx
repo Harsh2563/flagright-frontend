@@ -16,6 +16,7 @@ import { LoadingSpinner } from '../../../components/common/LoadingSpinner';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
 import { BackButton } from '../../../components/user/BackButton';
 import { getTransactionRelationships } from '../../../services/relationshipService';
+import { useToastMessage } from '@/utils/toast';
 
 export default function TransactionDetailPage() {
   const router = useRouter();
@@ -34,6 +35,7 @@ export default function TransactionDetailPage() {
   const [relationshipsError, setRelationshipsError] = useState<string | null>(
     null
   );
+  const toast = useToastMessage();
   useEffect(() => {
     if (transactionId) {
       const foundTransaction = getTransactionById(transactionId);
@@ -44,10 +46,12 @@ export default function TransactionDetailPage() {
         fetchTransactionRelationships(transactionId);
       } else if (!transactionsLoading) {
         setError('Transaction not found');
+        toast.error('Transaction not found');
         setLoading(false);
       }
     } else if (!transactionsLoading) {
       setError('Invalid transaction ID');
+      toast.error('Invalid transaction ID');
       setLoading(false);
     }
   }, [transactionId, getTransactionById, transactionsLoading]);
@@ -62,6 +66,7 @@ export default function TransactionDetailPage() {
       setRelationships(relationshipData);
     } catch (err) {
       console.error('Error fetching transaction relationships:', err);
+      toast.error('Failed to load relationship data');
       setRelationshipsError('Failed to load relationship data');
     } finally {
       setRelationshipsLoading(false);

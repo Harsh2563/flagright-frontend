@@ -14,11 +14,16 @@ import {
 } from '@heroui/react';
 import { IUser, IShortestPathUser, IShortestPath } from '@/types/user';
 import { findShortestPath } from '@/services/userService';
-import { GraphIcon, InfoIcon, AnalyticsIcon, ExclamationIcon } from '../ui/icons';
+import {
+  GraphIcon,
+  InfoIcon,
+  AnalyticsIcon,
+  ExclamationIcon,
+} from '../ui/icons';
 import { UserValidationErrors as ValidationErrors } from '../../types/error';
 import { useUsers } from '@/contexts/UserContext';
 import { PathActions, PathGraph, PathLegend, UserSelector } from './path';
-
+import { useToastMessage } from '@/utils/toast';
 
 interface ShortestPathFinderProps {
   users: IUser[];
@@ -36,14 +41,17 @@ export function ShortestPathFinder({
   const [pathResult, setPathResult] = useState<IShortestPath | null>(null);
   const [pathLength, setPathLength] = useState<number | null>(null);
   const { getUserById } = useUsers();
+  const toast = useToastMessage();
 
   const handleFindPath = async () => {
     if (!startUser || !targetUser) {
+      toast.error('Please select both start and target users');
       setError('Please select both start and target users');
       return;
     }
 
     if (startUser === targetUser) {
+      toast.error('Start and target users must be different');
       setError('Start and target users must be different');
       return;
     }
@@ -65,10 +73,14 @@ export function ShortestPathFinder({
         setPathResult(response.data.path);
         setPathLength(response.data.length);
       } else {
+        console.error('Failed to find shortest path');
         setError('Failed to find a path between the selected users');
       }
     } catch (error) {
       console.error('Error finding shortest path:', error);
+      toast.error(
+        'An error occurred while finding the shortest path. Please try again later.'
+      );
       setError('Failed to find a path between the selected users');
     } finally {
       setLoading(false);

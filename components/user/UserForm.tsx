@@ -16,7 +16,7 @@ import {
 } from '@heroui/react';
 import { Country, State, City } from 'country-state-city';
 import { PaymentMethodType } from '../../types/enums/UserEnums';
-import {  UsersIcon } from '../../components/ui/icons';
+import { UsersIcon } from '../../components/ui/icons';
 import { title } from '../../components/ui/primitives';
 import {
   UserFormType,
@@ -26,12 +26,14 @@ import {
 import { UserValidationErrors as ValidationErrors } from '../../types/error';
 import { useUsers } from '../../contexts/UserContext';
 import { BackButton } from './BackButton';
+import { useToastMessage } from '@/utils/toast';
 
 export default function UserForm({ id = undefined }: { id?: string }) {
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { addUser, getUserById } = useUsers();
+  const toast = useToastMessage();
 
   const [formData, setFormData] = useState<UserFormType>({
     id: id,
@@ -46,14 +48,13 @@ export default function UserForm({ id = undefined }: { id?: string }) {
     country: '',
     paymentMethodTypes: [],
   });
-
   // Load user data if ID is provided
   useEffect(() => {
     if (id) {
       const user = getUserById(id);
       if (user) {
         // Convert IUser to UserFormType
-        setFormData({
+        const userData = {
           id: user.id,
           firstName: user.firstName,
           lastName: user.lastName,
@@ -65,7 +66,24 @@ export default function UserForm({ id = undefined }: { id?: string }) {
           postalCode: user.address?.postalCode || '',
           country: user.address?.country || '',
           paymentMethodTypes: user.paymentMethods?.map((pm) => pm.type) || [],
-        });
+        };
+
+        setFormData(userData);
+
+        // Initialize states based on country
+        if (userData.country) {
+          const countryStates = State.getStatesOfCountry(userData.country);
+          setStates(countryStates);
+        }
+
+        // Initialize cities based on state and country
+        if (userData.state && userData.country) {
+          const stateCities = City.getCitiesOfState(
+            userData.country,
+            userData.state
+          );
+          setCities(stateCities);
+        }
       }
     }
   }, [id, getUserById]);
@@ -81,15 +99,18 @@ export default function UserForm({ id = undefined }: { id?: string }) {
   useEffect(() => {
     setCountries(Country.getAllCountries());
   }, []);
-
   useEffect(() => {
     if (formData.country) {
       const countryStates = State.getStatesOfCountry(formData.country);
       setStates(countryStates);
-      setFormData((prev) => ({ ...prev, state: '', city: '' }));
-      setCities([]);
+
+      // Only reset state and city if this is a new selection, not during initialization
+      if (!id) {
+        setFormData((prev) => ({ ...prev, state: '', city: '' }));
+        setCities([]);
+      }
     }
-  }, [formData.country]);
+  }, [formData.country, id]);
 
   useEffect(() => {
     if (formData.state && formData.country) {
@@ -98,9 +119,13 @@ export default function UserForm({ id = undefined }: { id?: string }) {
         formData.state
       );
       setCities(stateCities);
-      setFormData((prev) => ({ ...prev, city: '' }));
+
+      // Only reset city if this is a new selection, not during initialization
+      if (!id) {
+        setFormData((prev) => ({ ...prev, city: '' }));
+      }
     }
-  }, [formData.state, formData.country]);
+  }, [formData.state, formData.country, id]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -108,7 +133,6 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
     // Validate form data against the schema
     const validationResult = UserFormSchema.safeParse(formData);
-
     if (!validationResult.success) {
       console.log('Validation errors:', validationResult.error.errors);
 
@@ -119,6 +143,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
       });
 
       setValidationErrors(errors);
+      toast.error('Please fix the validation errors before submitting');
       return;
     }
     try {
@@ -129,7 +154,14 @@ export default function UserForm({ id = undefined }: { id?: string }) {
       const newUser = await addUser(user);
 
       if (newUser) {
+        toast.success(
+          id ? 'User updated successfully!' : 'User created successfully!'
+        );
         router.push('/users');
+      } else {
+        toast.error(
+          id ? 'Failed to update user. Please try again.' : 'Failed to create user. Please try again.'  
+        );
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -137,12 +169,14 @@ export default function UserForm({ id = undefined }: { id?: string }) {
           ...validationErrors,
           general: `Error: ${error.message}`,
         });
+        toast.error(`Error: ${error.message}`);
       } else {
         console.error('Error creating user:', error);
         setValidationErrors({
           ...validationErrors,
           general: 'An unknown error occurred. Please try again.',
         });
+        toast.error('An unknown error occurred. Please try again.');
       }
     } finally {
       setIsSubmitting(false);

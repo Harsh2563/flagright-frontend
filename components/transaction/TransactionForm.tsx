@@ -34,6 +34,7 @@ import { z } from 'zod';
 import { BackButton } from '../user';
 import { currencies, convertCurrency, isValidIpAddress } from '@/helper/helper';
 import { Country, State } from 'country-state-city';
+import { useToastMessage } from '@/utils/toast';
 
 type TransactionFormType = z.infer<typeof TransactionSchema>;
 
@@ -63,18 +64,27 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
       },
     },
   });
-
+  const toast = useToastMessage();
   // Load existing transaction data if id is provided
   useEffect(() => {
     if (id) {
       const transaction = getTransactionById(id);
       if (transaction) {
-        setFormData({
+        const transactionData = {
           ...transaction,
           senderId: transaction.senderId || '',
           receiverId: transaction.receiverId || '',
-        });
-        console.log(transaction?.deviceInfo?.geolocation?.state);
+        };
+
+        setFormData(transactionData);
+
+        // Initialize states based on country if country exists in device info
+        if (transaction.deviceInfo?.geolocation?.country) {
+          const countryStates = State.getStatesOfCountry(
+            transaction.deviceInfo.geolocation.country
+          );
+          setStates(countryStates);
+        }
       }
     }
   }, [id, getTransactionById]);
@@ -94,25 +104,11 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
       state: deviceInfo?.geolocation?.state || '',
     },
   });
+
   // Initialize countries list
   useEffect(() => {
     setCountries(Country.getAllCountries());
   }, []);
-
-  // Load states for a country without resetting the state field initially
-  useEffect(() => {
-    const loadStatesForCountry = () => {
-      if (formData.deviceInfo?.geolocation?.country) {
-        const countryStates = State.getStatesOfCountry(
-          formData.deviceInfo.geolocation.country
-        );
-        setStates(countryStates);
-      }
-    };
-
-    loadStatesForCountry();
-  }, [id]);
-
   // Update states when country changes
   useEffect(() => {
     if (formData.deviceInfo?.geolocation?.country) {
@@ -121,7 +117,8 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
       );
       setStates(countryStates);
 
-      if (!id || formData.deviceInfo.geolocation.state === '') {
+      // Only reset state if this is a new transaction or if country selection is being changed after initial load
+      if (!id || !formData.id) {
         setFormData((prev) => ({
           ...prev,
           deviceInfo: {
@@ -129,29 +126,21 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
             geolocation: {
               ...getDeviceInfo(prev.deviceInfo).geolocation,
               country: prev.deviceInfo?.geolocation?.country || '',
+              state: '',
             },
           },
         }));
       }
     }
-  }, [formData.deviceInfo?.geolocation?.country]);
-
+  }, [formData.deviceInfo?.geolocation?.country, id, formData.id]);
   // Update cities when state changes
   useEffect(() => {
     if (
       formData.deviceInfo?.geolocation?.state &&
       formData.deviceInfo?.geolocation?.country
     ) {
-      setFormData((prev) => ({
-        ...prev,
-        deviceInfo: {
-          ...getDeviceInfo(prev.deviceInfo),
-          geolocation: {
-            ...getDeviceInfo(prev.deviceInfo).geolocation,
-            state: prev.deviceInfo?.geolocation?.state || '',
-          },
-        },
-      }));
+      // We don't need to reset any values here, just ensure the state value is maintained
+      // but we're keeping the hook for future additions like city selection
     }
   }, [
     formData.deviceInfo?.geolocation?.state,
@@ -165,7 +154,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
 
     // Validate form data against the schema
     const validateResult = TransactionSchema.safeParse(formData);
-
     if (!validateResult.success) {
       const errors: ValidationErrors = {};
       validateResult.error.errors.forEach((err) => {
@@ -174,18 +162,28 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
       });
 
       setValidationErrors(errors);
+      toast.error('Please fix the validation errors before submitting');
       return;
     }
 
     try {
-      setIsSubmitting(true);
-
-      // Form validation passed, proceed with submission
+      setIsSubmitting(true); // Form validation passed, proceed with submission
       const transaction = formDataToTransaction(formData);
       const newTransaction = await addTransaction(formData);
 
       if (newTransaction) {
+        toast.success(
+          id
+            ? 'Transaction updated successfully!'
+            : 'Transaction created successfully!'
+        );
         router.push('/transactions');
+      } else {
+        toast.error(
+          id
+            ? 'Failed to update transaction. Please try again.'
+            : 'Failed to create transaction. Please try again.'
+        );
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -193,12 +191,14 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
           ...validationErrors,
           general: `Error: ${error.message}`,
         });
+        toast.error(`Error: ${error.message}`);
       } else {
         console.error('Error creating transaction:', error);
         setValidationErrors({
           ...validationErrors,
           general: 'An unknown error occurred. Please try again.',
         });
+        toast.error('An unknown error occurred. Please try again.');
       }
     } finally {
       setIsSubmitting(false);

@@ -6,6 +6,7 @@ import * as React from 'react';
 import { HeroUIProvider } from '@heroui/system';
 import { useRouter } from 'next/navigation';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
+import { Toaster } from 'react-hot-toast';
 import { UserProvider } from '../contexts/UserContext';
 import { TransactionProvider } from '../contexts/TransactionContext';
 
@@ -24,12 +25,25 @@ declare module '@react-types/shared' {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
-
   return (
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>
+        {' '}
         <UserProvider>
           <TransactionProvider>
+            <Toaster
+              position="bottom-right"
+              toastOptions={{
+                style: {
+                  background: '#121212',
+                  color: '#FFFFFF',
+                  padding: '16px',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+                  fontSize: '14px',
+                },
+              }}
+            />
             {children}
           </TransactionProvider>
         </UserProvider>
