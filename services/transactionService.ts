@@ -22,9 +22,11 @@ export async function getTransactions(): Promise<{
       hasNextPage: false,
       hasPreviousPage: false,
     };
+
     return { transactions, pagination };
   } catch (error) {
     console.error('Error fetching transactions:', error);
+
     return { transactions: [], pagination: {} as IPaginationTransaction };
   }
 }
@@ -35,6 +37,7 @@ export async function handleTransaction(
   try {
     const response = await api.post('/transactions', transaction);
     const newTransaction: ITransaction = response?.data?.data?.transaction;
+
     return newTransaction;
   } catch (error) {
     console.error('Error creating transaction:', error);
@@ -83,9 +86,11 @@ export async function searchTransactions(
     }
 
     const finalUrl = `/transactions/search?${queryString.toString()}`;
+
     console.log('Final API URL:', finalUrl);
 
     const response = await api.get(finalUrl);
+
     return response.data;
   } catch (error) {
     console.error('Error searching users:', error);

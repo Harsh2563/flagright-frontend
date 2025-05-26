@@ -1,6 +1,6 @@
 'use client';
 
-import { IErrorMessageProps } from "@/types/common";
+import { IErrorMessageProps } from '@/types/common';
 
 export function ErrorMessage({ message }: IErrorMessageProps) {
   return (

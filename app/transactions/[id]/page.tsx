@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+
 import { useTransactions } from '../../../contexts/TransactionContext';
 import { useUsers } from '../../../contexts/UserContext';
 import { ITransaction } from '../../../types/transaction';
@@ -16,6 +17,7 @@ import { LoadingSpinner } from '../../../components/common/LoadingSpinner';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
 import { BackButton } from '../../../components/common/BackButton';
 import { getTransactionRelationships } from '../../../services/relationshipService';
+
 import { useToastMessage } from '@/utils/toast';
 
 export default function TransactionDetailPage() {
@@ -36,9 +38,11 @@ export default function TransactionDetailPage() {
     null
   );
   const toast = useToastMessage();
+
   useEffect(() => {
     if (transactionId) {
       const foundTransaction = getTransactionById(transactionId);
+
       if (foundTransaction) {
         setTransaction(foundTransaction);
         setLoading(false);
@@ -92,6 +96,7 @@ export default function TransactionDetailPage() {
   const handleBack = () => {
     router.push('/transactions');
   };
+
   return (
     <section className="container mx-auto px-4 py-8">
       {loading || usersLoading ? (
@@ -100,7 +105,7 @@ export default function TransactionDetailPage() {
         <ErrorMessage message={error} />
       ) : transaction ? (
         <>
-          <BackButton onBack={handleBack} content="Back to Transactions" />
+          <BackButton content="Back to Transactions" onBack={handleBack} />
           <TransactionHeader
             transaction={{
               ...transaction,
@@ -118,13 +123,13 @@ export default function TransactionDetailPage() {
 
           {/* Relationship Components */}
           <TransactionRelationshipGraph
-            relationships={relationships}
-            isLoading={relationshipsLoading}
             centerTransactionId={transactionId}
+            isLoading={relationshipsLoading}
+            relationships={relationships}
           />
           <TransactionRelation
-            relationships={relationships}
             isLoading={relationshipsLoading}
+            relationships={relationships}
           />
           {relationshipsError && (
             <div className="mt-6">

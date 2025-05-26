@@ -3,6 +3,7 @@ import { Card, CardBody, CardFooter } from '@heroui/card';
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Link } from '@heroui/link';
+
 import { ITransaction } from '../../types/transaction';
 import {
   TransactionStatus,
@@ -72,6 +73,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
   const receiverName = receiver
     ? `${receiver.firstName} ${receiver.lastName}`
     : 'Unknown';
+
   return (
     <Card className="w-full">
       <CardBody className="p-4">
@@ -89,19 +91,19 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
               </p>
               {transaction.description && (
                 <p className="text-default-500 text-sm italic">
-                  "{transaction.description}"
+                  &quot;{transaction.description}&quot;
                 </p>
               )}
             </div>
             <Chip
               color={getStatusColor(transaction.status)}
-              variant="flat"
               size="sm"
+              variant="flat"
             >
               {transaction.status}
             </Chip>
           </div>
-          
+
           <div className="mt-2">
             <p className="text-sm text-default-500">
               <span className="font-medium">From:</span> {senderName}
@@ -145,19 +147,19 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
       <CardFooter className="flex justify-end gap-2">
         <Button
           as={Link}
-          href={`/transactions/${transaction.id}`}
           color="primary"
-          variant="flat"
+          href={`/transactions/${transaction.id}`}
           size="sm"
+          variant="flat"
         >
           View Details
         </Button>
         <Button
           as={Link}
-          href={`transactions/add-transaction/${transaction.id}`}
           color="secondary"
-          variant="flat"
+          href={`transactions/add-transaction/${transaction.id}`}
           size="sm"
+          variant="flat"
         >
           Update
         </Button>

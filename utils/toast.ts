@@ -2,8 +2,8 @@ import toast from 'react-hot-toast';
 
 export const useToastMessage = () => {
   const baseStyle = {
-    background: '#121212', 
-    color: '#FFFFFF', 
+    background: '#121212',
+    color: '#FFFFFF',
     padding: '16px',
     borderRadius: '8px',
     boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
@@ -16,7 +16,7 @@ export const useToastMessage = () => {
       position: 'bottom-right',
       style: {
         ...baseStyle,
-        border: '1px solid #0D9488', 
+        border: '1px solid #0D9488',
       },
     });
   };
@@ -39,7 +39,7 @@ export const useToastMessage = () => {
       icon: '⚠️',
       style: {
         ...baseStyle,
-        border: '1px solid #F59E0B', 
+        border: '1px solid #F59E0B',
       },
     });
   };
@@ -95,7 +95,7 @@ export const useToastMessage = () => {
           position,
           style: {
             ...baseStyle,
-            border: '1px solid #6B7280', 
+            border: '1px solid #6B7280',
           },
         });
     }

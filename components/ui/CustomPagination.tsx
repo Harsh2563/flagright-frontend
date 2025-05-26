@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { Button } from '@heroui/react';
+
 import { ChevronLeftIcon, ChevronRightIcon } from './icons';
+
 import { ICustomPaginationProps } from '@/types/pagination';
 
 export const CustomPagination: React.FC<ICustomPaginationProps> = ({
@@ -85,11 +87,11 @@ export const CustomPagination: React.FC<ICustomPaginationProps> = ({
         {/* Previous button */}
         <Button
           isIconOnly
-          variant="light"
-          size="sm"
-          isDisabled={!hasPreviousPage || isDisabled}
-          onPress={() => onPageChange(currentPage - 1)}
           className="min-w-8 w-8 h-8"
+          isDisabled={!hasPreviousPage || isDisabled}
+          size="sm"
+          variant="light"
+          onPress={() => onPageChange(currentPage - 1)}
         >
           <ChevronLeftIcon size={16} />
         </Button>
@@ -110,12 +112,12 @@ export const CustomPagination: React.FC<ICustomPaginationProps> = ({
           return (
             <Button
               key={pageNumber}
-              variant={isCurrentPage ? 'solid' : 'light'}
-              color={isCurrentPage ? 'primary' : 'default'}
-              size="sm"
-              isDisabled={isDisabled}
-              onPress={() => onPageChange(pageNumber)}
               className="min-w-8 w-8 h-8"
+              color={isCurrentPage ? 'primary' : 'default'}
+              isDisabled={isDisabled}
+              size="sm"
+              variant={isCurrentPage ? 'solid' : 'light'}
+              onPress={() => onPageChange(pageNumber)}
             >
               {pageNumber}
             </Button>
@@ -125,11 +127,11 @@ export const CustomPagination: React.FC<ICustomPaginationProps> = ({
         {/* Next button */}
         <Button
           isIconOnly
-          variant="light"
-          size="sm"
-          isDisabled={!hasNextPage || isDisabled}
-          onPress={() => onPageChange(currentPage + 1)}
           className="min-w-8 w-8 h-8"
+          isDisabled={!hasNextPage || isDisabled}
+          size="sm"
+          variant="light"
+          onPress={() => onPageChange(currentPage + 1)}
         >
           <ChevronRightIcon size={16} />
         </Button>

@@ -1,5 +1,7 @@
 import React from 'react';
+
 import { title, subtitle } from '../ui/primitives';
+
 import { IHeroSectionProps } from '@/types/home';
 
 export const HeroSection: React.FC<IHeroSectionProps> = ({

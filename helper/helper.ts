@@ -136,6 +136,7 @@ export const convertCurrency = (
       conversionRates['USD']?.[toCurrency]
     ) {
       const toUsd = amount * conversionRates[fromCurrency]['USD'];
+
       return parseFloat(
         (toUsd * conversionRates['USD'][toCurrency]).toFixed(2)
       );
@@ -144,6 +145,7 @@ export const convertCurrency = (
 
   // If conversion is not possible, return the original amount
   console.warn(`Cannot convert from ${fromCurrency} to ${toCurrency}`);
+
   return amount;
 };
 
@@ -178,6 +180,7 @@ export const validateAndFormatIpAddress = (ip: string): string | null => {
   if (!isValidIpAddress(ip)) {
     return null;
   }
+
   return ip.trim();
 };
 
@@ -185,6 +188,7 @@ export const validateAndFormatIpAddress = (ip: string): string | null => {
 export const downloadFile = (blob: Blob, fileName: string) => {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
+
   link.href = url;
   link.download = fileName;
   link.style.visibility = 'hidden';

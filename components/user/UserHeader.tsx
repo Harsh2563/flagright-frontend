@@ -12,7 +12,7 @@ export function UserHeader({ user }: UserHeaderProps) {
   return (
     <div className="flex items-center gap-4 mb-8 bg-gradient-to-r from-primary-500/10 to-secondary-500/10 dark:from-primary-500/20 dark:to-secondary-500/20 p-6 rounded-xl shadow-sm border border-primary-200/20 dark:border-primary-700/30">
       <div className="p-4 bg-primary/20 dark:bg-primary/30 rounded-full shadow-inner dark:shadow-primary/10">
-        <UsersIcon size={32} className="text-primary dark:text-primary-400" />
+        <UsersIcon className="text-primary dark:text-primary-400" size={32} />
       </div>
       <div>
         <h1 className={title({ size: 'sm' })}>

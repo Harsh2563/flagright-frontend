@@ -10,6 +10,7 @@ export async function getUserRelationships(
   try {
     const response = await api.get(`/relationships/user/${userId}`);
     const relationship: IUserRelationshipGraphResponse = response?.data;
+
     return relationship;
   } catch (error) {
     console.error('Error fetching user relationships:', error);
@@ -25,6 +26,7 @@ export async function getTransactionRelationships(
       `/relationships/transaction/${transactionId}`
     );
     const relationship: ITransactionRelationshipGraphResponse = response?.data;
+
     return relationship;
   } catch (error) {
     console.error('Error fetching transaction relationships:', error);

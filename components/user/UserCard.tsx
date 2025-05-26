@@ -3,6 +3,7 @@ import { Card, CardBody, CardFooter } from '@heroui/card';
 import { Button } from '@heroui/button';
 import { Chip } from '@heroui/chip';
 import { Link } from '@heroui/link';
+
 import { IUser } from '../../types/user';
 
 interface UserCardProps {
@@ -24,7 +25,7 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
                 <p className="text-default-500 text-sm">{user.phone}</p>
               )}
             </div>
-            <Chip color="primary" variant="flat" size="sm">
+            <Chip color="primary" size="sm" variant="flat">
               {user.paymentMethods?.length || 0} payment method(s)
             </Chip>
           </div>
@@ -55,19 +56,19 @@ export const UserCard: React.FC<UserCardProps> = ({ user }) => {
       <CardFooter className="flex justify-end gap-2">
         <Button
           as={Link}
-          href={`/users/${user.id}`}
           color="primary"
-          variant="flat"
+          href={`/users/${user.id}`}
           size="sm"
+          variant="flat"
         >
           View Details
         </Button>
         <Button
           as={Link}
-          href={`users/add-user/${user.id}`}
           color="secondary"
-          variant="flat"
+          href={`users/add-user/${user.id}`}
           size="sm"
+          variant="flat"
         >
           Update
         </Button>

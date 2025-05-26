@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+
 import { useUsers } from '../../../contexts/UserContext';
 import { IUser } from '../../../types/user';
 import { UserDetails } from '../../../components/user/UserDetails';
@@ -10,6 +11,7 @@ import { LoadingSpinner } from '../../../components/common/LoadingSpinner';
 import { ErrorMessage } from '../../../components/common/ErrorMessage';
 import { getUserRelationships } from '../../../services/relationshipService';
 import { IUserRelationshipGraphResponse } from '../../../types/relationship';
+
 import { useToastMessage } from '@/utils/toast';
 
 export default function UserDetailPage() {
@@ -28,11 +30,12 @@ export default function UserDetailPage() {
     useState<IUserRelationshipGraphResponse | null>(null);
   const [relationshipsLoading, setRelationshipsLoading] =
     useState<boolean>(false);
-    const toast = useToastMessage();
+  const toast = useToastMessage();
 
   useEffect(() => {
     if (userId) {
       const foundUser = getUserById(userId);
+
       if (foundUser) {
         setUser(foundUser);
         setLoading(false);
@@ -53,6 +56,7 @@ export default function UserDetailPage() {
       try {
         setRelationshipsLoading(true);
         const result = await getUserRelationships(userId);
+
         setRelationships(result);
         console.log('User relationships fetched:', result);
       } catch (err) {
@@ -74,6 +78,7 @@ export default function UserDetailPage() {
     const interval = setInterval(() => {
       dotCount = (dotCount + 1) % 4;
       const dots = '.'.repeat(dotCount);
+
       setLoadingText(`Generating user relationship graph${dots}`);
     }, 500);
 
@@ -92,13 +97,13 @@ export default function UserDetailPage() {
         <ErrorMessage message={error} />
       ) : user ? (
         <UserDetails
-          user={user}
-          onGenerateGraph={handleGenerateGraph}
-          onBack={() => router.back()}
           isGeneratingGraph={isGeneratingGraph}
           loadingText={loadingText}
           relationships={relationships}
           relationshipsLoading={relationshipsLoading}
+          user={user}
+          onBack={() => router.back()}
+          onGenerateGraph={handleGenerateGraph}
         />
       ) : (
         <UserNotFound />

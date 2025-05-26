@@ -1,17 +1,19 @@
 'use client';
 
 import React, { useState, useEffect, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
+
 import { title, subtitle } from '../../components/ui/primitives';
 import { AddIcon, UsersIcon } from '../../components/ui/icons';
 import { UserCard } from '../../components/user/UserCard';
 import { ShortestPathFinder } from '../../components/user/relation/ShortestPathFinder';
 import { useUsers } from '../../contexts/UserContext';
-import { useRouter } from 'next/navigation';
 import { UserSearchFilter } from '../../components/user/UserSearchFilter';
 import { CustomPagination } from '../../components/ui/CustomPagination';
 import { IUserFilterState } from '../../types/user';
 import { searchUsers } from '../../services/userService';
 import { IUser } from '../../types/user';
+
 import { useToastMessage } from '@/utils/toast';
 
 export default function UsersPage() {
@@ -116,6 +118,7 @@ export default function UsersPage() {
 
     const startIndex = (filterState.page - 1) * filterState.limit;
     const endIndex = startIndex + filterState.limit;
+
     return contextUsers.slice(startIndex, endIndex);
   }, [contextUsers, filterState.page, filterState.limit]);
 
@@ -131,7 +134,7 @@ export default function UsersPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-primary/10 rounded-full">
-            <UsersIcon size={24} className="text-primary" />
+            <UsersIcon className="text-primary" size={24} />
           </div>
           <div>
             <h1 className={title({ size: 'sm' })}>Users</h1>
@@ -141,8 +144,8 @@ export default function UsersPage() {
           </div>
         </div>
         <button
-          onClick={() => router.push('/users/add-user')}
           className="bg-primary text-white px-4 py-2 rounded-md flex items-center gap-1"
+          onClick={() => router.push('/users/add-user')}
         >
           <AddIcon size={16} />
           Add User
@@ -151,22 +154,22 @@ export default function UsersPage() {
       {/* Search Filter Component */}
       <div className="mb-6">
         <UserSearchFilter
+          currentPage={displayPagination.currentPage}
           filterState={filterState}
-          onFilterChange={setFilterState}
-          onSearch={performSearch}
-          onReset={handleReset}
           isLoading={displayLoading}
           totalPages={displayPagination.totalPages}
-          currentPage={displayPagination.currentPage}
           totalUsers={displayPagination.totalUsers}
+          onFilterChange={setFilterState}
+          onReset={handleReset}
+          onSearch={performSearch}
         />
       </div>{' '}
       {/* Shortest Path Component */}
-      <ShortestPathFinder users={contextUsers} isLoading={contextLoading} />
+      <ShortestPathFinder isLoading={contextLoading} users={contextUsers} />
       {/* Results */}
       {displayLoading ? (
         <div className="flex justify-center py-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
         </div>
       ) : displayError ? (
         <div className="text-danger text-center py-10">{displayError}</div>
@@ -186,6 +189,7 @@ export default function UsersPage() {
       {!displayLoading && !displayError && displayPagination.totalPages > 1 && (
         <div className="mt-6">
           <CustomPagination
+            isDisabled={displayLoading}
             pagination={displayPagination}
             onPageChange={(page) => {
               setFilterState({
@@ -193,7 +197,6 @@ export default function UsersPage() {
                 page,
               });
             }}
-            isDisabled={displayLoading}
           />
         </div>
       )}

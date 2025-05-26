@@ -2,12 +2,12 @@ import React from 'react';
 import { Card, CardBody, CardHeader } from '@heroui/card';
 import { Chip } from '@heroui/chip';
 import { Divider } from '@heroui/divider';
+
 import { ITransaction } from '../../types/transaction';
 import {
   TransactionStatus,
   TransactionType,
 } from '../../types/enums/TransactionEnums';
-import { TransactionHeader } from './TransactionHeader';
 import {
   InfoIcon,
   DollarSignIcon,
@@ -81,8 +81,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-primary/20 dark:bg-primary/30 rounded-full">
                 <InfoIcon
-                  size={16}
                   className="text-primary dark:text-primary-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -95,7 +95,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                  <InfoIcon size={14} className="text-primary/70" />
+                  <InfoIcon className="text-primary/70" size={14} />
                   Type
                 </h3>
                 <p className="text-lg font-medium">
@@ -104,7 +104,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
               </div>
               <div>
                 <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                  <CalendarIcon size={14} className="text-primary/70" />
+                  <CalendarIcon className="text-primary/70" size={14} />
                   Date & Time
                 </h3>
                 <p className="text-lg font-medium">
@@ -113,7 +113,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
               </div>
               <div>
                 <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                  <CreditCardIcon size={14} className="text-primary/70" />
+                  <CreditCardIcon className="text-primary/70" size={14} />
                   Payment Method
                 </h3>
                 <p className="text-lg font-medium">
@@ -136,8 +136,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-secondary/20 dark:bg-secondary/30 rounded-full">
                 <DollarSignIcon
-                  size={16}
                   className="text-secondary dark:text-secondary-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -150,7 +150,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                  <DollarSignIcon size={14} className="text-secondary/70" />
+                  <DollarSignIcon className="text-secondary/70" size={14} />
                   Transaction Amount
                 </h3>
                 <p className="text-2xl font-bold text-secondary dark:text-secondary-400">
@@ -161,7 +161,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
                 transaction.destinationCurrency && (
                   <div>
                     <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                      <ArrowRightIcon size={14} className="text-secondary/70" />
+                      <ArrowRightIcon className="text-secondary/70" size={14} />
                       Destination Amount
                     </h3>
                     <p className="text-xl font-semibold text-secondary dark:text-secondary-400">
@@ -182,8 +182,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-success/20 dark:bg-success/30 rounded-full">
                 <InfoIcon
-                  size={16}
                   className="text-success dark:text-success-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -199,10 +199,10 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
                   Current Status
                 </h3>
                 <Chip
-                  color={getStatusColor(transaction.status)}
-                  variant="solid"
-                  size="lg"
                   className="capitalize font-medium shadow-sm mt-2"
+                  color={getStatusColor(transaction.status)}
+                  size="lg"
+                  variant="solid"
                 >
                   {transaction.status.charAt(0).toUpperCase() +
                     transaction.status.slice(1)}
@@ -229,8 +229,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-primary/20 dark:bg-primary/30 rounded-full">
                 <UserIcon
-                  size={16}
                   className="text-primary dark:text-primary-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -243,7 +243,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                  <UserIcon size={14} className="text-primary/70" />
+                  <UserIcon className="text-primary/70" size={14} />
                   Sender Name
                 </h3>
                 <p className="text-lg font-medium">
@@ -268,8 +268,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-secondary/20 dark:bg-secondary/30 rounded-full">
                 <UserIcon
-                  size={16}
                   className="text-secondary dark:text-secondary-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -282,7 +282,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="space-y-4">
               <div>
                 <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                  <UserIcon size={14} className="text-secondary/70" />
+                  <UserIcon className="text-secondary/70" size={14} />
                   Receiver Name
                 </h3>
                 <p className="text-lg font-medium">
@@ -309,8 +309,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-primary/20 dark:bg-primary/30 rounded-full">
                 <FileTextIcon
-                  size={16}
                   className="text-primary dark:text-primary-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -322,7 +322,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
           <CardBody>
             <div className="bg-gradient-to-r from-default-50 to-default-100 dark:from-default-100 dark:to-default-200 p-4 rounded-lg">
               <p className="text-default-700 dark:text-default-800 italic">
-                "{transaction.description}"
+                &quot;{transaction.description}&quot;
               </p>
             </div>
           </CardBody>
@@ -336,8 +336,8 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
             <div className="flex items-center gap-2">
               <div className="p-1 bg-warning/20 dark:bg-warning/30 rounded-full">
                 <DeviceIcon
-                  size={16}
                   className="text-warning dark:text-warning-400"
+                  size={16}
                 />
               </div>
               <h2 className="text-xl font-semibold dark:text-white">
@@ -351,7 +351,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
               {transaction.deviceInfo.ipAddress && (
                 <div>
                   <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                    <DeviceIcon size={14} className="text-warning/70" />
+                    <DeviceIcon className="text-warning/70" size={14} />
                     IP Address
                   </h3>
                   <p className="font-mono text-sm p-2 rounded mt-1">
@@ -364,7 +364,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
                   {transaction.deviceInfo.geolocation.country && (
                     <div>
                       <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                        <MapPinIcon size={14} className="text-warning/70" />
+                        <MapPinIcon className="text-warning/70" size={14} />
                         Country
                       </h3>
                       <p className="text-lg font-medium">
@@ -375,7 +375,7 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
                   {transaction.deviceInfo.geolocation.state && (
                     <div>
                       <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
-                        <MapPinIcon size={14} className="text-warning/70" />
+                        <MapPinIcon className="text-warning/70" size={14} />
                         State
                       </h3>
                       <p className="text-lg font-medium">

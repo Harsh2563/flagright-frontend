@@ -10,7 +10,9 @@ import {
   Spinner,
   Button,
 } from '@heroui/react';
+
 import { GraphIcon, DownloadIcon } from '../../ui/icons';
+
 import {
   IUserRelationshipGraphProps,
   IUserRelationshipGraphResponse,
@@ -33,6 +35,7 @@ export function UserRelationshipGraph({
       (Array.isArray(relationships) && relationships.length === 0)
     ) {
       alert('No relationship data available to export.');
+
       return;
     }
 
@@ -40,8 +43,10 @@ export function UserRelationshipGraph({
       const relationshipsArray = Array.isArray(relationships)
         ? relationships
         : [relationships];
+
       if (relationshipsArray.length === 0 || !relationshipsArray[0]?.data) {
         alert('No relationship data available to export.');
+
         return;
       }
 
@@ -66,10 +71,12 @@ export function UserRelationshipGraph({
       // Process relationships to build node labels and rows
       relationshipsArray.forEach((relationship, relationshipIndex) => {
         const data = relationship?.data;
+
         if (!data) return;
 
         const centerUserIdToUse = centerUserId || `center-${relationshipIndex}`;
         const centerLabel = 'Center User';
+
         nodeLabels[centerUserIdToUse] = centerLabel;
 
         // Process direct relationships
@@ -80,9 +87,11 @@ export function UserRelationshipGraph({
               rel.user.firstName ||
               rel.user.email ||
               `User ${userId.substring(0, 8)}`;
+
             nodeLabels[userId] = userDisplayName;
 
             const relationshipType = rel.relationshipType || 'Direct';
+
             rows.push([
               userId,
               'user',
@@ -102,6 +111,7 @@ export function UserRelationshipGraph({
               rel.user.firstName ||
               rel.user.email ||
               `User ${userId.substring(0, 8)}`;
+
             nodeLabels[userId] = userDisplayName;
 
             const relationshipType = rel.relationshipType || 'Transaction';
@@ -111,6 +121,7 @@ export function UserRelationshipGraph({
             if (relationshipType.startsWith('SHARED_DEVICE')) {
               const match = relationshipType.match(/\((\d+) transactions\)/);
               const transCount = match ? match[1] : 'unknown';
+
               details = `Shared device with ${transCount} transactions`;
             }
 
@@ -133,6 +144,7 @@ export function UserRelationshipGraph({
               tranData.relatedUser.firstName ||
               tranData.relatedUser.email ||
               `User ${userId.substring(0, 8)}`;
+
             nodeLabels[userId] = userDisplayName;
 
             const amount = tranData.transaction.amount;
@@ -169,6 +181,7 @@ export function UserRelationshipGraph({
               tranData.relatedUser.firstName ||
               tranData.relatedUser.email ||
               `User ${userId.substring(0, 8)}`;
+
             nodeLabels[userId] = userDisplayName;
 
             const amount = tranData.transaction.amount;
@@ -204,6 +217,7 @@ export function UserRelationshipGraph({
             data.directRelationships.forEach((rel) => {
               const userId = rel.user.id || `direct-user-${rel.user.id}`;
               const relationshipType = rel.relationshipType || 'Direct';
+
               if (!sharedAttributes[userId]) {
                 sharedAttributes[userId] = new Set<string>();
               }
@@ -215,6 +229,7 @@ export function UserRelationshipGraph({
             data.transactionRelationships.forEach((rel) => {
               const userId = rel.user.id || `trans-user-${rel.user.id}`;
               const relationshipType = rel.relationshipType || 'Transaction';
+
               if (!sharedAttributes[userId]) {
                 sharedAttributes[userId] = new Set<string>();
               }
@@ -251,11 +266,13 @@ export function UserRelationshipGraph({
       // Remove duplicate rows (e.g., users appearing in multiple relationships)
       const uniqueRows: string[][] = [];
       const seenUsers = new Set<string>();
+
       rows.forEach((row) => {
         const nodeId = row[0];
         const relationshipType = row[4];
         const connectedTo = row[3];
         const key = `${nodeId}-${relationshipType}-${connectedTo}`;
+
         if (!seenUsers.has(key)) {
           seenUsers.add(key);
           uniqueRows.push(row);
@@ -265,6 +282,7 @@ export function UserRelationshipGraph({
       // If there are no relationships, skip export
       if (uniqueRows.length === 0) {
         alert('No relationships to export.');
+
         return;
       }
 
@@ -278,6 +296,7 @@ export function UserRelationshipGraph({
 
       // Create and download the file
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
       downloadFile(blob, fileName);
     } catch (error) {
       console.error('Error exporting user graph data to CSV:', error);
@@ -306,6 +325,7 @@ export function UserRelationshipGraph({
 
     if (relationshipsArray.length === 0 || !relationshipsArray[0]?.data) {
       setGraphEmpty(true);
+
       return;
     }
 
@@ -320,6 +340,7 @@ export function UserRelationshipGraph({
     if (elements.nodes.length === 0) {
       console.log('No nodes found in the processed data');
       setGraphEmpty(true);
+
       return;
     }
 
@@ -432,15 +453,15 @@ export function UserRelationshipGraph({
         ],
         layout: {
           name: 'cose',
-          idealEdgeLength: 150,
+          idealEdgeLength: () => 150,
           nodeOverlap: 20,
           refresh: 20,
           fit: true,
           padding: 40,
           randomize: true,
           componentSpacing: 150,
-          nodeRepulsion: 8000,
-          edgeElasticity: 150,
+          nodeRepulsion: () => 8000,
+          edgeElasticity: () => 150,
           nestingFactor: 1.2,
           gravity: 80,
           numIter: 1000,
@@ -453,6 +474,7 @@ export function UserRelationshipGraph({
       // Add zoom controls
       cyRef.current.on('tap', 'node', function (evt) {
         const node = evt.target;
+
         cyRef.current?.animate({
           fit: {
             eles: node,
@@ -515,7 +537,7 @@ export function UserRelationshipGraph({
             className="flex justify-center items-center"
             style={{ minHeight: '300px' }}
           >
-            <Spinner size="lg" color="primary" />
+            <Spinner color="primary" size="lg" />
           </CardBody>
         </Card>
       </div>
@@ -554,18 +576,18 @@ export function UserRelationshipGraph({
             </h2>
           </div>
           <Button
-            variant="light"
-            color="primary"
-            size="sm"
-            startContent={<DownloadIcon size={16} />}
+            aria-label="Export graph data as CSV"
             className="whitespace-nowrap"
-            onPress={exportToCSV}
+            color="primary"
             isDisabled={
               graphEmpty ||
               !relationships ||
               (Array.isArray(relationships) && relationships.length === 0)
             }
-            aria-label="Export graph data as CSV"
+            size="sm"
+            startContent={<DownloadIcon size={16} />}
+            variant="light"
+            onPress={exportToCSV}
           >
             Export CSV
           </Button>
@@ -576,22 +598,22 @@ export function UserRelationshipGraph({
             ref={graphContainerRef}
             className="graph-container rounded-md overflow-hidden border border-gray-200 dark:border-gray-700"
             style={{ height: '550px', width: '100%' }}
-          ></div>
+          />
           <div className="mt-4 pt-4 border-t grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-3 rounded-full bg-[#10B981]"></span>
+              <span className="block w-3 h-3 rounded-full bg-[#10B981]" />
               <span>Direct Relationship</span>
             </div>
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-3 rounded-full bg-[#F59E0B]"></span>
+              <span className="block w-3 h-3 rounded-full bg-[#F59E0B]" />
               <span>Transaction Relationship</span>
             </div>
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-3 rounded-full bg-[#EF4444]"></span>
+              <span className="block w-3 h-3 rounded-full bg-[#EF4444]" />
               <span>Sent Transaction</span>
             </div>
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-3 rounded-full bg-[#3B82F6]"></span>
+              <span className="block w-3 h-3 rounded-full bg-[#3B82F6]" />
               <span>Received Transaction</span>
             </div>
           </div>
@@ -613,6 +635,7 @@ function processRelationshipsForGraph(
 
   relationshipsArray.forEach((relationship, relationshipIndex) => {
     const data = relationship?.data;
+
     if (!data) return;
 
     // Skip if no data is available
@@ -644,6 +667,7 @@ function processRelationshipsForGraph(
       // Determine center user from data (first relationship's "from" user)
       if (data.directRelationships?.[0]?.user) {
         const placeholderId = `center-${relationshipIndex}`;
+
         centerUser = {
           data: {
             id: placeholderId,
@@ -664,6 +688,7 @@ function processRelationshipsForGraph(
       data.directRelationships.forEach((rel, index) => {
         // Add the related user
         const userId = rel.user.id || `direct-user-${index}`;
+
         if (!nodeIds.has(userId)) {
           const userDisplayName =
             rel.user.firstName ||
@@ -683,6 +708,7 @@ function processRelationshipsForGraph(
 
         // Track shared attributes
         const relationshipType = rel.relationshipType || 'Direct';
+
         if (!sharedAttributes[userId]) {
           sharedAttributes[userId] = new Set<string>();
         }
@@ -706,6 +732,7 @@ function processRelationshipsForGraph(
       data.transactionRelationships.forEach((rel, index) => {
         // Add the related user
         const userId = rel.user.id || `trans-user-${index}`;
+
         if (!nodeIds.has(userId)) {
           const userDisplayName =
             rel.user.firstName ||
@@ -725,6 +752,7 @@ function processRelationshipsForGraph(
 
         // Track shared attributes
         const relationshipType = rel.relationshipType || 'Transaction';
+
         if (!sharedAttributes[userId]) {
           sharedAttributes[userId] = new Set<string>();
         }
@@ -748,6 +776,7 @@ function processRelationshipsForGraph(
       data.sentTransactions.forEach((tranData, index) => {
         // Add the related user
         const userId = tranData.relatedUser.id || `sent-user-${index}`;
+
         if (!nodeIds.has(userId)) {
           const userDisplayName =
             tranData.relatedUser.firstName ||
@@ -791,6 +820,7 @@ function processRelationshipsForGraph(
       data.receivedTransactions.forEach((tranData, index) => {
         // Add the related user
         const userId = tranData.relatedUser.id || `recv-user-${index}`;
+
         if (!nodeIds.has(userId)) {
           const userDisplayName =
             tranData.relatedUser.firstName ||
@@ -872,6 +902,7 @@ function processRelationshipsForGraph(
         const deviceAttrs = attributes.filter((attr) =>
           attr.startsWith('SHARED_DEVICE')
         );
+
         if (deviceAttrs.length > 0) {
           const match = deviceAttrs[0].match(/\((\d+) transactions\)/);
           const transCount = match ? match[1] : '';

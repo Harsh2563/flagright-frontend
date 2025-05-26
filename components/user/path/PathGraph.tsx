@@ -1,9 +1,12 @@
 'use client';
 
 import React from 'react';
-import { IShortestPath, IPathNode, IPathRelationship } from '@/types/user';
+
 import { ArrowRightIcon } from '../../ui/icons';
+
 import { PathNode } from './PathNode';
+
+import { IShortestPath, IPathNode, IPathRelationship } from '@/types/user';
 
 function getNodeId(node: IPathNode): string {
   return node.type === 'User'
@@ -18,11 +21,13 @@ function organizePathSequence(
   if (!nodes.length) return [];
 
   const nodeMap = new Map<string, IPathNode>();
+
   nodes.forEach((node) => {
     const id =
       node.type === 'User'
         ? (node.properties as any).id
         : (node.properties as any).id;
+
     nodeMap.set(id, node);
   });
 
@@ -30,6 +35,7 @@ function organizePathSequence(
   const endNodeIds = new Set(relationships.map((rel) => rel.endNodeId));
 
   let currentId: string | null = null;
+
   Array.from(startNodeIds).forEach((id) => {
     if (!endNodeIds.has(id)) {
       currentId = id;
@@ -45,6 +51,7 @@ function organizePathSequence(
 
   while (currentId && nodeMap.has(currentId)) {
     const currentNode = nodeMap.get(currentId)!;
+
     orderedNodes.push(currentNode);
 
     let nextRel = relationships.find(
@@ -85,10 +92,10 @@ export function PathGraph({ path }: { path: IShortestPath }) {
             <PathNode node={node} />
             {index < orderedNodes.length - 1 && (
               <div className="flex flex-col items-center mx-3 relative">
-                <div className="w-16 h-2 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full shadow-sm"></div>
+                <div className="w-16 h-2 bg-gradient-to-r from-blue-500 to-purple-500 dark:from-blue-600 dark:to-purple-600 rounded-full shadow-sm" />
                 <ArrowRightIcon
-                  size={28}
                   className="text-primary-600 dark:text-gray-300 absolute -top-3 drop-shadow-md"
+                  size={28}
                   strokeWidth={3}
                 />
                 <div className="text-xs font-medium text-default-700 dark:text-gray-300 mt-3 px-2 py-1 bg-default-100 dark:bg-gray-800 rounded-md border border-default-200 dark:border-gray-700 shadow-sm">

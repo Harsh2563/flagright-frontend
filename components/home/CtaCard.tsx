@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@heroui/card';
 import { button as buttonStyles } from '@heroui/theme';
 import { Link } from '@heroui/link';
+
 import { ICtaCardProps } from '@/types/home';
 
 export const CtaCard: React.FC<ICtaCardProps> = ({
@@ -18,12 +19,12 @@ export const CtaCard: React.FC<ICtaCardProps> = ({
           <p className="text-default-500 mt-2">{description}</p>
         </div>
         <Link
-          href={buttonHref}
           className={buttonStyles({
             color: 'primary',
             variant: 'shadow',
             radius: 'full',
           })}
+          href={buttonHref}
         >
           {buttonText}
         </Link>

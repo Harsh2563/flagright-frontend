@@ -7,17 +7,19 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react';
+
 import { IUser } from '../types/user';
 import { getUsers, handleUser } from '../services/userService';
 import { UserSchemaType } from '../schemas/userSchema';
-import { IPaginationUser } from '@/types/pagination';
 import { useToastMessage } from '../utils/toast';
+
+import { IPaginationUser } from '@/types/pagination';
 
 interface UserContextType {
   users: IUser[];
   loading: boolean;
   error: string | null;
-  pagination: IPaginationUser; 
+  pagination: IPaginationUser;
   fetchUsers: () => Promise<void>;
   addUser: (userData: UserSchemaType) => Promise<IUser | null>;
   refreshUsers: () => Promise<void>;
@@ -48,7 +50,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const {users, pagination} = await getUsers();
+      const { users, pagination } = await getUsers();
+
       setUsers(users);
       setPagination(pagination);
       setInitialized(true);
@@ -73,10 +76,12 @@ export function UserProvider({ children }: { children: ReactNode }) {
           setUsers((prevUsers) => [...prevUsers, newUser]);
         }
         refreshUsers();
+
         return newUser;
       } catch (err) {
         console.error('Error adding user:', err);
         setError('Failed to add user. Please try again later.');
+
         return null;
       } finally {
         setLoading(false);
@@ -89,7 +94,8 @@ export function UserProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const {users, pagination} = await getUsers();
+      const { users, pagination } = await getUsers();
+
       setUsers(users);
       setPagination(pagination);
     } catch (err) {
@@ -130,8 +136,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
 
 export function useUsers() {
   const context = useContext(UserContext);
+
   if (context === undefined) {
     throw new Error('useUsers must be used within a UserProvider');
   }
+
   return context;
 }

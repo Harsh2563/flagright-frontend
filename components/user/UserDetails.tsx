@@ -1,5 +1,8 @@
 'use client';
 
+import { IUser } from '../../types/user';
+import { IUserRelationshipGraphResponse } from '../../types/relationship';
+
 import { UserHeader } from './UserHeader';
 import { PersonalInfoCard } from './PersonalInfoCard';
 import { AddressCard } from './AddressCard';
@@ -7,8 +10,6 @@ import { PaymentMethodsCard } from './PaymentMethodsCard';
 import { BackButton } from './../common/BackButton';
 import { UserRelation } from './relation/UserRelation';
 import { UserRelationshipGraph } from './relation/UserRelationshipGraph';
-import { IUser } from '../../types/user';
-import { IUserRelationshipGraphResponse } from '../../types/relationship';
 
 interface UserDetailsProps {
   user: IUser;
@@ -28,7 +29,7 @@ export function UserDetails({
 }: UserDetailsProps) {
   return (
     <>
-      <BackButton onBack={onBack} content='Back to Users' />
+      <BackButton content="Back to Users" onBack={onBack} />
       <UserHeader user={user} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <PersonalInfoCard user={user} />
@@ -36,13 +37,13 @@ export function UserDetails({
         <PaymentMethodsCard user={user} />
       </div>{' '}
       <UserRelationshipGraph
-        relationships={relationships}
-        isLoading={relationshipsLoading}
         centerUserId={user?.id}
+        isLoading={relationshipsLoading}
+        relationships={relationships}
       />
       <UserRelation
-        relationships={relationships}
         isLoading={relationshipsLoading}
+        relationships={relationships}
       />
     </>
   );

@@ -12,16 +12,23 @@ import {
   Progress,
   Button,
 } from '@heroui/react';
-import { IUser, IShortestPathUser, IShortestPath } from '@/types/user';
-import { findShortestPath } from '@/services/userService';
+
 import {
   GraphIcon,
   InfoIcon,
   AnalyticsIcon,
   ExclamationIcon,
 } from '../../ui/icons';
+import {
+  PathActions,
+  PathGraph,
+  PathLegend,
+  UserSelector,
+} from '../../user/path';
+
+import { IUser, IShortestPathUser, IShortestPath } from '@/types/user';
+import { findShortestPath } from '@/services/userService';
 import { useUsers } from '@/contexts/UserContext';
-import { PathActions, PathGraph, PathLegend, UserSelector } from '../../user/path';
 import { useToastMessage } from '@/utils/toast';
 
 interface ShortestPathFinderProps {
@@ -46,12 +53,14 @@ export function ShortestPathFinder({
     if (!startUser || !targetUser) {
       toast.error('Please select both start and target users');
       setError('Please select both start and target users');
+
       return;
     }
 
     if (startUser === targetUser) {
       toast.error('Start and target users must be different');
       setError('Start and target users must be different');
+
       return;
     }
 
@@ -100,8 +109,8 @@ export function ShortestPathFinder({
         <div className="flex items-center gap-2">
           <div className="p-2 rounded-full bg-primary/10 dark:bg-gray-700/50">
             <AnalyticsIcon
-              size={24}
               className="text-primary dark:text-gray-300"
+              size={24}
             />
           </div>
           <div>
@@ -117,9 +126,9 @@ export function ShortestPathFinder({
         <Tooltip content="The shortest path shows how users are connected through transactions. This helps identify indirect relationships between accounts.">
           <Button
             isIconOnly
-            variant="light"
-            size="sm"
             className="text-default-500"
+            size="sm"
+            variant="light"
           >
             <InfoIcon size={18} />
           </Button>
@@ -129,32 +138,32 @@ export function ShortestPathFinder({
       <CardBody>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 my-6">
           <UserSelector
-            label="Start User"
-            userId={startUser}
-            setUserId={setStartUser}
-            users={users}
-            iconColor="primary"
             borderColor="primary"
             errorMessage={startUser ? '' : 'Start user is required'}
             getUserById={getUserById}
+            iconColor="primary"
+            label="Start User"
+            setUserId={setStartUser}
+            userId={startUser}
+            users={users}
           />
           <UserSelector
-            label="Target User"
-            userId={targetUser}
-            setUserId={setTargetUser}
-            users={users}
-            iconColor="secondary"
             borderColor="secondary"
             errorMessage={targetUser ? '' : 'Target user is required'}
             getUserById={getUserById}
+            iconColor="secondary"
+            label="Target User"
+            setUserId={setTargetUser}
+            userId={targetUser}
+            users={users}
           />
         </div>
 
         <PathActions
-          resetSelection={resetSelection}
           handleFindPath={handleFindPath}
           isLoading={isLoading}
           loading={loading}
+          resetSelection={resetSelection}
           startUser={startUser}
           targetUser={targetUser}
         />
@@ -162,8 +171,8 @@ export function ShortestPathFinder({
         {error && (
           <div className="p-4 mb-4 text-danger bg-danger-50 dark:bg-danger-900/20 rounded-md flex items-center gap-2">
             <ExclamationIcon
-              size={20}
               className="text-primary dark:text-danger"
+              size={20}
             />
             {error}
           </div>
@@ -172,17 +181,17 @@ export function ShortestPathFinder({
         {loading && (
           <div className="py-8 space-y-4">
             <div className="flex justify-center">
-              <Spinner size="lg" color="primary" />
+              <Spinner color="primary" size="lg" />
             </div>
             <p className="text-center text-default-500">
               Finding the shortest path between users...
             </p>
             <Progress
-              size="sm"
               isIndeterminate
               aria-label="Loading..."
               className="max-w-md mx-auto"
               color="primary"
+              size="sm"
             />
           </div>
         )}
@@ -191,13 +200,13 @@ export function ShortestPathFinder({
           <div className="mt-6">
             <div className="flex items-center gap-2 mb-4">
               <GraphIcon
-                size={20}
                 className="text-primary dark:text-gray-400"
+                size={20}
               />
               <h3 className="text-lg font-semibold dark:text-gray-200">
                 Shortest Path Found
               </h3>
-              <Chip size="sm" color="success" variant="flat" className="ml-2">
+              <Chip className="ml-2" color="success" size="sm" variant="flat">
                 Length: {pathLength}
               </Chip>
             </div>

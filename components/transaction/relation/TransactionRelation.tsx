@@ -1,6 +1,5 @@
 'use client';
 
-import { ITransactionRelationshipGraphResponse } from '../../../types/relationship';
 import {
   Card,
   CardBody,
@@ -9,6 +8,8 @@ import {
   Chip,
   Spinner,
 } from '@heroui/react';
+
+import { ITransactionRelationshipGraphResponse } from '../../../types/relationship';
 import {
   CreditCardIcon,
   DeviceIcon,
@@ -28,7 +29,7 @@ export function TransactionRelation({
   if (isLoading) {
     return (
       <div className="mt-6 flex justify-center">
-        <Spinner size="lg" color="primary" />
+        <Spinner color="primary" size="lg" />
       </div>
     );
   }
@@ -137,7 +138,7 @@ function renderTransactionRelationshipData(
             {sharedDeviceTransactions?.map((relationshipData, relIndex) => (
               <div key={relIndex} className="mb-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Chip size="sm" color="danger" variant="flat">
+                  <Chip color="danger" size="sm" variant="flat">
                     {relationshipData?.relationshipType}
                   </Chip>
                 </div>
@@ -148,7 +149,7 @@ function renderTransactionRelationshipData(
                         Transaction ID:{' '}
                         {relationshipData.transaction.id?.substring(0, 12)}...
                       </p>
-                      <Chip size="sm" color="danger" variant="flat">
+                      <Chip color="danger" size="sm" variant="flat">
                         {relationshipData.transaction.amount}{' '}
                         {relationshipData.transaction.currency}
                       </Chip>
@@ -156,7 +157,8 @@ function renderTransactionRelationshipData(
                     <div className="grid grid-cols-2 gap-2 text-xs text-default-600">
                       <p>Status: {relationshipData.transaction.status}</p>
                       <p>
-                        Type: {relationshipData.transaction.transactionType.toUpperCase()}
+                        Type:{' '}
+                        {relationshipData.transaction.transactionType.toUpperCase()}
                       </p>
                       <p>
                         Date:{' '}
@@ -192,7 +194,7 @@ function renderTransactionRelationshipData(
             {sharedIPTransactions?.map((relationshipData, relIndex) => (
               <div key={relIndex} className="mb-4">
                 <div className="flex items-center gap-2 mb-2">
-                  <Chip size="sm" color="secondary" variant="flat">
+                  <Chip color="secondary" size="sm" variant="flat">
                     {relationshipData?.relationshipType}
                   </Chip>
                 </div>
@@ -203,7 +205,7 @@ function renderTransactionRelationshipData(
                         Transaction ID:{' '}
                         {relationshipData.transaction.id?.substring(0, 12)}...
                       </p>
-                      <Chip size="sm" color="secondary" variant="flat">
+                      <Chip color="secondary" size="sm" variant="flat">
                         {relationshipData.transaction.amount}{' '}
                         {relationshipData.transaction.currency}
                       </Chip>
@@ -211,7 +213,8 @@ function renderTransactionRelationshipData(
                     <div className="grid grid-cols-2 gap-2 text-xs text-default-600">
                       <p>Status: {relationshipData.transaction.status}</p>
                       <p>
-                        Type: {relationshipData.transaction.transactionType.toUpperCase()}
+                        Type:{' '}
+                        {relationshipData.transaction.transactionType.toUpperCase()}
                       </p>
                       <p>
                         Date:{' '}

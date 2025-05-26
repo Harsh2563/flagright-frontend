@@ -7,6 +7,7 @@ import { HeroUIProvider } from '@heroui/system';
 import { useRouter } from 'next/navigation';
 import { ThemeProvider as NextThemesProvider } from 'next-themes';
 import { Toaster } from 'react-hot-toast';
+
 import { UserProvider } from '../contexts/UserContext';
 import { TransactionProvider } from '../contexts/TransactionContext';
 
@@ -25,6 +26,7 @@ declare module '@react-types/shared' {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+
   return (
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider {...themeProps}>

@@ -2,7 +2,9 @@
 
 import React from 'react';
 import { Select, SelectItem } from '@heroui/react';
+
 import { UserIcon } from '../../ui/icons';
+
 import { IUser } from '@/types/user';
 
 interface UserSelectorProps {
@@ -29,13 +31,19 @@ export function UserSelector({
   return (
     <div className="space-y-1">
       <div className="flex items-center gap-2 mb-2">
-        <UserIcon size={20} className={`text-${iconColor}`} />
+        <UserIcon className={`text-${iconColor}`} size={20} />
         <span className="font-medium dark:text-gray-200">{label}</span>
       </div>
       <Select
-        labelPlacement="outside"
+        classNames={{
+          trigger: `border-2 hover:border-${borderColor} focus-within:border-${borderColor} dark:bg-gray-800 dark:border-gray-700`,
+          value: 'dark:text-gray-300',
+        }}
+        errorMessage={errorMessage}
         id={`${label.toLowerCase().replace(' ', '')}Id`}
+        labelPlacement="outside"
         name={`${label.toLowerCase().replace(' ', '')}Id`}
+        placeholder={`Select ${label.toLowerCase()}`}
         renderValue={() => {
           return userId ? (
             <div className="flex items-center gap-2">
@@ -43,17 +51,12 @@ export function UserSelector({
             </div>
           ) : null;
         }}
-        placeholder={`Select ${label.toLowerCase()}`}
         selectedKeys={userId ? [userId] : []}
         onSelectionChange={(keys) => {
           const selectedKey =
             keys instanceof Set ? (Array.from(keys)[0] as string) : undefined;
+
           setUserId(selectedKey || '');
-        }}
-        errorMessage={errorMessage}
-        classNames={{
-          trigger: `border-2 hover:border-${borderColor} focus-within:border-${borderColor} dark:bg-gray-800 dark:border-gray-700`,
-          value: 'dark:text-gray-300',
         }}
       >
         {users.map((user) => (

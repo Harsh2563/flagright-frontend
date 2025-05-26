@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { Button } from '@heroui/react';
+
 import { RelationsIcon, ResetIcon } from '../../ui/icons';
 
 interface PathActionsProps {
@@ -24,19 +25,17 @@ export function PathActions({
   return (
     <div className="flex justify-end gap-2 mb-4">
       <Button
-        variant="flat"
         color="danger"
-        onClick={resetSelection}
         isDisabled={isLoading || loading || (!startUser && !targetUser)}
-        startContent={
-          <ResetIcon size={16} className="text-danger" />
-        }
+        startContent={<ResetIcon className="text-danger" size={16} />}
+        variant="flat"
+        onClick={resetSelection}
       >
         Reset
       </Button>
       <Button
+        className="px-4"
         color="primary"
-        onClick={handleFindPath}
         isDisabled={
           isLoading ||
           loading ||
@@ -46,7 +45,7 @@ export function PathActions({
         }
         isLoading={loading}
         startContent={!loading && <RelationsIcon size={16} />}
-        className="px-4"
+        onClick={handleFindPath}
       >
         Find Shortest Path
       </Button>

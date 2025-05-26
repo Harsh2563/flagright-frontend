@@ -2,11 +2,11 @@ import '@/styles/globals.css';
 import { Metadata, Viewport } from 'next';
 import clsx from 'clsx';
 
-import { Providers } from './providers';
-
 import { siteConfig } from '../config/site';
 import { fontSans } from '../config/fonts';
 import { Navbar } from '../components/navbar/Navbar';
+
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
   title: {
@@ -46,7 +46,7 @@ export default function RootLayout({
             <main className="container mx-auto max-w-7xl pt-16 px-6 flex-grow">
               {children}
             </main>
-            <footer></footer>
+            <footer />
           </div>
         </Providers>
       </body>

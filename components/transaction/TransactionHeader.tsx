@@ -1,9 +1,11 @@
 'use client';
 
+import { Chip } from '@heroui/chip';
+
 import { title, subtitle } from '../ui/primitives';
 import { TransactionIcon } from '../ui/icons';
 import { ITransaction } from '../../types/transaction';
-import { Chip } from '@heroui/chip';
+
 import { getStatusColor, getTransactionTypeLabel } from './TransactionDetails';
 
 interface TransactionHeaderProps {
@@ -19,8 +21,8 @@ export function TransactionHeader({ transaction }: TransactionHeaderProps) {
       <div className="flex items-center gap-4">
         <div className="p-4 bg-primary/20 dark:bg-primary/30 rounded-full shadow-inner dark:shadow-primary/10">
           <TransactionIcon
-            size={32}
             className="text-primary dark:text-primary-400"
+            size={32}
           />
         </div>
         <div>
@@ -41,10 +43,10 @@ export function TransactionHeader({ transaction }: TransactionHeaderProps) {
       </div>
       <div className="flex flex-col items-end gap-2">
         <Chip
-          color={getStatusColor(transaction.status)}
-          variant="solid"
-          size="md"
           className="capitalize font-medium shadow-sm"
+          color={getStatusColor(transaction.status)}
+          size="md"
+          variant="solid"
         >
           {transaction.status.charAt(0).toUpperCase() +
             transaction.status.slice(1)}

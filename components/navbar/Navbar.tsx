@@ -8,11 +8,11 @@ import {
   NavbarMenuItem,
 } from '@heroui/navbar';
 import { Link } from '@heroui/link';
-import { ThemeSwitch } from '../theme-switch';
 import { link as linkStyles } from '@heroui/theme';
 import NextLink from 'next/link';
 import clsx from 'clsx';
 
+import { ThemeSwitch } from '../theme-switch';
 import { siteConfig } from '../../config/site';
 import { Logo } from '../ui/icons';
 

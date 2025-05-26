@@ -2,6 +2,7 @@ import React from 'react';
 import { Card } from '@heroui/card';
 import { button as buttonStyles } from '@heroui/theme';
 import { Link } from '@heroui/link';
+
 import { IFeatureCardProps } from '@/types/home';
 
 export const FeatureCard: React.FC<IFeatureCardProps> = ({
@@ -19,13 +20,13 @@ export const FeatureCard: React.FC<IFeatureCardProps> = ({
         <h2 className="text-xl font-bold">{title}</h2>
         <p className="text-default-500">{description}</p>
         <Link
-          href={linkHref}
           className={buttonStyles({
             color,
             variant: 'flat',
             radius: 'full',
             class: 'mt-2',
           })}
+          href={linkHref}
         >
           {linkText}
         </Link>

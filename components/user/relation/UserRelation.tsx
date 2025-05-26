@@ -1,6 +1,5 @@
 'use client';
 
-import { IUserRelationshipGraphResponse } from '../../../types/relationship';
 import {
   Card,
   CardBody,
@@ -9,10 +8,15 @@ import {
   Chip,
   Spinner,
 } from '@heroui/react';
+
+import { IUserRelationshipGraphResponse } from '../../../types/relationship';
 import { ProfileIcon } from '../../ui/icons';
 
 interface UserRelationProps {
-  relationships: IUserRelationshipGraphResponse[] | IUserRelationshipGraphResponse | null;
+  relationships:
+    | IUserRelationshipGraphResponse[]
+    | IUserRelationshipGraphResponse
+    | null;
   isLoading?: boolean;
 }
 
@@ -23,7 +27,7 @@ export function UserRelation({
   if (isLoading) {
     return (
       <div className="mt-6 flex justify-center">
-        <Spinner size="lg" color="primary" />
+        <Spinner color="primary" size="lg" />
       </div>
     );
   }
@@ -39,8 +43,10 @@ export function UserRelation({
   }
 
   // Check if relationships is array or single object
-  const relationshipsArray = Array.isArray(relationships) ? relationships : [relationships];
-  
+  const relationshipsArray = Array.isArray(relationships)
+    ? relationships
+    : [relationships];
+
   if (relationshipsArray.length === 0) {
     return (
       <Card className="mt-6 shadow-md">
@@ -80,12 +86,12 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
   if (!response || !response.data) {
     return <p>Invalid relationship data format.</p>;
   }
-  
-  const { 
+
+  const {
     directRelationships = [],
     transactionRelationships = [],
     sentTransactions = [],
-    receivedTransactions = []
+    receivedTransactions = [],
   } = response.data;
 
   return (
@@ -103,7 +109,7 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
                   <p className="font-medium">
                     {rel.user.firstName} {rel.user.lastName}
                   </p>
-                  <Chip size="sm" color="primary" variant="flat">
+                  <Chip color="primary" size="sm" variant="flat">
                     {rel.relationshipType}
                   </Chip>
                 </div>
@@ -112,7 +118,8 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
             ))}
           </div>
         </div>
-      )}      {transactionRelationships.length > 0 && (
+      )}{' '}
+      {transactionRelationships.length > 0 && (
         <div className="mb-4">
           <p className="text-lg font-medium mb-2">Transaction Relationships</p>
           <div className="pl-4 border-l-2 border-secondary-200 dark:border-secondary-800">
@@ -125,18 +132,17 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
                   <p className="font-medium">
                     {rel.user.firstName} {rel.user.lastName}
                   </p>
-                  <Chip size="sm" color="secondary" variant="flat">
+                  <Chip color="secondary" size="sm" variant="flat">
                     {rel.relationshipType}
                   </Chip>
                 </div>
-                <p className="text-xs text-default-500">
-                  {rel.user.email}
-                </p>
+                <p className="text-xs text-default-500">{rel.user.email}</p>
               </div>
             ))}
           </div>
         </div>
-      )}      {sentTransactions.length > 0 && (
+      )}{' '}
+      {sentTransactions.length > 0 && (
         <div className="mb-4">
           <p className="text-lg font-medium mb-2">Sent Transactions</p>
           <div className="pl-4 border-l-2 border-warning-200 dark:border-warning-800">
@@ -149,7 +155,7 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
                   <p className="font-medium">
                     To: {data.relatedUser.firstName} {data.relatedUser.lastName}
                   </p>
-                  <Chip size="sm" color="warning" variant="flat">
+                  <Chip color="warning" size="sm" variant="flat">
                     {data.transaction.amount} {data.transaction.currency}
                   </Chip>
                 </div>
@@ -164,7 +170,6 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
           </div>
         </div>
       )}
-
       {response.data.receivedTransactions.length > 0 && (
         <div className="mb-4">
           <p className="text-lg font-medium mb-2">Received Transactions</p>
@@ -179,7 +184,7 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
                     From: {data.relatedUser.firstName}{' '}
                     {data.relatedUser.lastName}
                   </p>
-                  <Chip size="sm" color="success" variant="flat">
+                  <Chip color="success" size="sm" variant="flat">
                     {data.transaction.amount} {data.transaction.currency}
                   </Chip>
                 </div>
@@ -194,7 +199,6 @@ function renderRelationshipData(response: IUserRelationshipGraphResponse) {
           </div>
         </div>
       )}
-
       {response.data.directRelationships.length === 0 &&
         response.data.transactionRelationships.length === 0 &&
         response.data.sentTransactions.length === 0 &&

@@ -4,8 +4,6 @@ export interface IHeroSectionProps {
   description: string;
 }
 
-
-
 export interface IFeatureCardProps {
   title: string;
   description: string;
@@ -14,7 +12,6 @@ export interface IFeatureCardProps {
   linkHref: string;
   color?: 'primary' | 'secondary' | 'success' | 'warning' | 'danger';
 }
-
 
 export interface ICtaCardProps {
   title: string;

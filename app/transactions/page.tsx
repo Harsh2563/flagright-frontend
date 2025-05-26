@@ -1,12 +1,14 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { title, subtitle } from '../../components/ui/primitives';
 import { TransactionIcon } from '../../components/ui/icons';
 import { TransactionCard } from '../../components/transaction/TransactionCard';
 import { useTransactions } from '../../contexts/TransactionContext';
-import { useRouter } from 'next/navigation';
+
 import TransactionSearchFilter from '@/components/transaction/TransactionSearchFilter';
-import React, { useCallback, useEffect, useState } from 'react';
 import { ITransaction } from '@/types/transaction';
 import { ITransactionFilterState } from '@/types/transaction';
 import { searchTransactions } from '@/services/transactionService';
@@ -65,6 +67,7 @@ export default function TransactionsPage() {
       setSearchLoading(false);
     }
   }, [filterState]);
+
   // Automatically trigger search when pagination changes
   useEffect(() => {
     if (isSearchMode) {
@@ -135,6 +138,7 @@ export default function TransactionsPage() {
 
     const startIndex = (filterState.page - 1) * filterState.limit;
     const endIndex = startIndex + filterState.limit;
+
     return contextTransactions.slice(startIndex, endIndex);
   }, [contextTransactions, filterState.page, filterState.limit]);
 
@@ -153,7 +157,7 @@ export default function TransactionsPage() {
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <div className="p-2 bg-primary/10 rounded-full">
-            <TransactionIcon size={24} className="text-primary" />
+            <TransactionIcon className="text-primary" size={24} />
           </div>
           <div>
             <h1 className={title({ size: 'sm' })}>Transactions</h1>
@@ -163,21 +167,21 @@ export default function TransactionsPage() {
           </div>
         </div>
         <button
-          onClick={() => router.push('/transactions/add-transaction')}
           className="bg-primary text-white px-4 py-2 rounded-md flex items-center gap-1"
+          onClick={() => router.push('/transactions/add-transaction')}
         >
           <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
             fill="none"
+            height="20"
             stroke="currentColor"
-            strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="20"
           >
-            <line x1="12" y1="5" x2="12" y2="19"></line>
-            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <line x1="12" x2="12" y1="5" y2="19" />
+            <line x1="5" x2="19" y1="12" y2="12" />
           </svg>
           Add Transaction
         </button>
@@ -185,19 +189,19 @@ export default function TransactionsPage() {
       {/* Search Filter Component */}{' '}
       <div className="mb-6">
         <TransactionSearchFilter
+          currentPage={displayPagination.currentPage}
           filterState={filterState}
-          onFilterChange={setFilterState}
-          onSearch={performSearch}
-          onReset={handleReset}
           isLoading={displayLoading}
           totalPages={displayPagination.totalPages}
-          currentPage={displayPagination.currentPage}
           totalTransactions={displayPagination.totalTransactions}
+          onFilterChange={setFilterState}
+          onReset={handleReset}
+          onSearch={performSearch}
         />
       </div>
       {displayLoading ? (
         <div className="flex justify-center py-10">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
         </div>
       ) : displayError ? (
         <div className="text-danger text-center py-10">{displayError}</div>
@@ -217,6 +221,7 @@ export default function TransactionsPage() {
       {!displayLoading && !displayError && displayPagination.totalPages > 1 && (
         <div className="mt-6">
           <CustomPagination
+            isDisabled={displayLoading}
             pagination={displayPagination}
             onPageChange={(page) => {
               setFilterState({
@@ -224,7 +229,6 @@ export default function TransactionsPage() {
                 page,
               });
             }}
-            isDisabled={displayLoading}
           />
         </div>
       )}

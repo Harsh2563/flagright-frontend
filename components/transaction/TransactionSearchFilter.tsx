@@ -14,11 +14,13 @@ import {
   Select,
   SelectItem,
 } from '@heroui/react';
+
 import { SearchIcon, FilterIcon, RefreshIcon } from '../ui/icons';
 import {
   ITransactionFilterState,
   ITransactionSearchFilters,
 } from '../../types/transaction';
+
 import { useUsers } from '@/contexts/UserContext';
 import {
   TransactionStatus,
@@ -54,6 +56,7 @@ export const TransactionSearchFilter: React.FC<
   );
   const { users, getUserById } = useUsers();
   const toast = useToastMessage();
+
   useEffect(() => {
     if (filterState.searchText !== undefined) {
       setLocalSearchText(filterState.searchText);
@@ -159,47 +162,47 @@ export const TransactionSearchFilter: React.FC<
           {/* Main Search Bar */}
           <div className="flex gap-2 items-center">
             <Input
+              className="flex-1"
+              isDisabled={isLoading}
               placeholder="Search transactions by description..."
-              value={localSearchText}
-              onValueChange={setLocalSearchText}
               startContent={
                 <SearchIcon className="text-default-400" size={18} />
               }
+              value={localSearchText}
               variant="bordered"
-              className="flex-1"
-              isDisabled={isLoading}
               onKeyPress={(e) => {
                 if (e.key === 'Enter' && !isLoading) {
                   handleSearch();
                 }
               }}
+              onValueChange={setLocalSearchText}
             />{' '}
             {/* Search Button */}
             <Button
-              color="primary"
-              onPress={handleSearch}
               className="shrink-0"
+              color="primary"
               isDisabled={isLoading}
               startContent={<SearchIcon size={16} />}
+              onPress={handleSearch}
             >
               Search
             </Button>
             <Button
-              variant="bordered"
               isIconOnly
-              onPress={() => setIsExpanded(!isExpanded)}
               className="shrink-0"
               isDisabled={isLoading}
+              variant="bordered"
+              onPress={() => setIsExpanded(!isExpanded)}
             >
               <FilterIcon size={18} />
             </Button>
             {hasActiveFilters() && (
               <Button
-                variant="bordered"
                 isIconOnly
-                onPress={clearAllFilters}
                 className="shrink-0"
                 isDisabled={isLoading}
+                variant="bordered"
+                onPress={clearAllFilters}
               >
                 <RefreshIcon size={18} />
               </Button>
@@ -208,9 +211,9 @@ export const TransactionSearchFilter: React.FC<
             <Dropdown>
               <DropdownTrigger>
                 <Button
-                  variant="bordered"
                   className="shrink-0"
                   isDisabled={isLoading}
+                  variant="bordered"
                 >
                   Sort:{' '}
                   {
@@ -220,25 +223,31 @@ export const TransactionSearchFilter: React.FC<
                   ({filterState.sortOrder?.toUpperCase()})
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu>
-                {sortOptions.map((option) => (
-                  <DropdownItem
-                    key={option.value}
-                    onClick={() => handleSortChange(option.value as any, 'asc')}
-                  >
-                    {option.label} (ASC)
-                  </DropdownItem>
-                ))}
-                {sortOptions.map((option) => (
-                  <DropdownItem
-                    key={`${option.value}-desc`}
-                    onClick={() =>
-                      handleSortChange(option.value as any, 'desc')
-                    }
-                  >
-                    {option.label} (DESC)
-                  </DropdownItem>
-                ))}
+              <DropdownMenu aria-label="Sort Options">
+                <div>
+                  {sortOptions.map((option) => (
+                    <DropdownItem
+                      key={option.value}
+                      onClick={() =>
+                        handleSortChange(option.value as any, 'asc')
+                      }
+                    >
+                      {option.label} (ASC)
+                    </DropdownItem>
+                  ))}
+                </div>
+                <div>
+                  {sortOptions.map((option) => (
+                    <DropdownItem
+                      key={`${option.value}-desc`}
+                      onClick={() =>
+                        handleSortChange(option.value as any, 'desc')
+                      }
+                    >
+                      {option.label} (DESC)
+                    </DropdownItem>
+                  ))}
+                </div>
               </DropdownMenu>
             </Dropdown>
           </div>
@@ -248,9 +257,9 @@ export const TransactionSearchFilter: React.FC<
               {' '}
               {selectedSearchFields.size > 0 && (
                 <Chip
+                  color="primary"
                   size="sm"
                   variant="flat"
-                  color="primary"
                   onClose={() => setSelectedSearchFields(new Set())}
                 >
                   Search in: {Array.from(selectedSearchFields).join(', ')}
@@ -258,9 +267,9 @@ export const TransactionSearchFilter: React.FC<
               )}
               {filterState.searchText && (
                 <Chip
+                  color="primary"
                   size="sm"
                   variant="flat"
-                  color="primary"
                   onClose={() => {
                     setLocalSearchText('');
                     onFilterChange({
@@ -284,6 +293,7 @@ export const TransactionSearchFilter: React.FC<
                 )
                   return null;
                 let displayValue = value;
+
                 if (typeof value === 'string' && value.length > 20) {
                   displayValue = value.substring(0, 20) + '...';
                 }
@@ -318,13 +328,9 @@ export const TransactionSearchFilter: React.FC<
               </div>{' '}
               {/* Address Filters*/}{' '}
               <Select
+                isDisabled={isLoading}
                 label="senderId"
                 placeholder="Select a sender"
-                selectedKeys={
-                  filterState.filters.senderId
-                    ? [filterState.filters.senderId]
-                    : []
-                }
                 renderValue={() => {
                   return filterState.filters.senderId ? (
                     <div className="flex items-center gap-2">
@@ -333,12 +339,17 @@ export const TransactionSearchFilter: React.FC<
                     </div>
                   ) : null;
                 }}
+                selectedKeys={
+                  filterState.filters.senderId
+                    ? [filterState.filters.senderId]
+                    : []
+                }
+                variant="bordered"
                 onSelectionChange={(keys) => {
                   const value = Array.from(keys)[0] as string;
+
                   handleFilterChange('senderId', value || undefined);
                 }}
-                variant="bordered"
-                isDisabled={isLoading}
               >
                 {users?.map((user) => (
                   <SelectItem key={user.id}>
@@ -347,13 +358,9 @@ export const TransactionSearchFilter: React.FC<
                 ))}
               </Select>
               <Select
+                isDisabled={isLoading || !users}
                 label="ReceiverId"
                 placeholder="Select a receiver"
-                selectedKeys={
-                  filterState.filters.receiverId
-                    ? [filterState.filters.receiverId]
-                    : []
-                }
                 renderValue={() => {
                   return filterState.filters.receiverId ? (
                     <div className="flex items-center gap-2">
@@ -362,12 +369,17 @@ export const TransactionSearchFilter: React.FC<
                     </div>
                   ) : null;
                 }}
+                selectedKeys={
+                  filterState.filters.receiverId
+                    ? [filterState.filters.receiverId]
+                    : []
+                }
+                variant="bordered"
                 onSelectionChange={(keys) => {
                   const value = Array.from(keys)[0] as string;
+
                   handleFilterChange('receiverId', value || undefined);
                 }}
-                variant="bordered"
-                isDisabled={isLoading || !users}
               >
                 {users?.map((user) => (
                   <SelectItem key={user?.id}>
@@ -377,6 +389,7 @@ export const TransactionSearchFilter: React.FC<
               </Select>
               {/* Transaction Type */}
               <Select
+                isDisabled={isLoading}
                 label="Transaction Type"
                 placeholder="Select type"
                 selectedKeys={
@@ -384,15 +397,15 @@ export const TransactionSearchFilter: React.FC<
                     ? [filterState.filters.transactionType]
                     : []
                 }
+                variant="bordered"
                 onSelectionChange={(keys) => {
                   const value = Array.from(keys)[0] as string;
+
                   handleFilterChange(
                     'transactionType',
                     value ? (value as TransactionType) : undefined
                   );
                 }}
-                variant="bordered"
-                isDisabled={isLoading}
               >
                 {Object.values(TransactionType).map((type) => (
                   <SelectItem key={type}>
@@ -402,20 +415,21 @@ export const TransactionSearchFilter: React.FC<
               </Select>
               {/* Status */}
               <Select
+                isDisabled={isLoading}
                 label="Status"
                 placeholder="Select status"
                 selectedKeys={
                   filterState.filters.status ? [filterState.filters.status] : []
                 }
+                variant="bordered"
                 onSelectionChange={(keys) => {
                   const value = Array.from(keys)[0] as string;
+
                   handleFilterChange(
                     'status',
                     value ? (value as TransactionStatus) : undefined
                   );
                 }}
-                variant="bordered"
-                isDisabled={isLoading}
               >
                 {Object.values(TransactionStatus).map((status) => (
                   <SelectItem key={status}>
@@ -425,6 +439,7 @@ export const TransactionSearchFilter: React.FC<
               </Select>
               {/* Currency */}
               <Select
+                isDisabled={isLoading}
                 label="Currency"
                 placeholder="Select currency"
                 selectedKeys={
@@ -432,12 +447,12 @@ export const TransactionSearchFilter: React.FC<
                     ? [filterState.filters.currency]
                     : []
                 }
+                variant="bordered"
                 onSelectionChange={(keys) => {
                   const value = Array.from(keys)[0] as string;
+
                   handleFilterChange('currency', value || undefined);
                 }}
-                variant="bordered"
-                isDisabled={isLoading}
               >
                 {currencies.map((currency) => (
                   <SelectItem key={currency}>{currency}</SelectItem>
@@ -445,6 +460,7 @@ export const TransactionSearchFilter: React.FC<
               </Select>
               {/* Payment Method */}
               <Select
+                isDisabled={isLoading}
                 label="Payment Method"
                 placeholder="Select payment method"
                 selectedKeys={
@@ -452,15 +468,15 @@ export const TransactionSearchFilter: React.FC<
                     ? [filterState.filters.paymentMethod]
                     : []
                 }
+                variant="bordered"
                 onSelectionChange={(keys) => {
                   const value = Array.from(keys)[0] as string;
+
                   handleFilterChange(
                     'paymentMethod',
                     value ? (value as PaymentMethodType) : undefined
                   );
                 }}
-                variant="bordered"
-                isDisabled={isLoading}
               >
                 {Object.values(PaymentMethodType).map((method) => (
                   <SelectItem key={method}>
@@ -471,71 +487,73 @@ export const TransactionSearchFilter: React.FC<
               </Select>{' '}
               {/* Amount Min */}
               <Input
-                type="number"
+                description={
+                  !filterState.filters.currency ? 'Select a currency first' : ''
+                }
+                isDisabled={isLoading || !filterState.filters.currency}
                 label="Min Amount"
                 placeholder="Minimum amount"
+                type="number"
                 value={localAmountMin}
+                variant="bordered"
                 onValueChange={(value) => {
                   setLocalAmountMin(value);
                 }}
-                variant="bordered"
-                isDisabled={isLoading || !filterState.filters.currency}
-                description={
-                  !filterState.filters.currency ? 'Select a currency first' : ''
-                }
               />{' '}
               {/* Amount Max */}
               <Input
-                type="number"
-                label="Max Amount"
-                placeholder="Maximum amount"
-                value={localAmountMax}
-                onValueChange={(value) => {
-                  setLocalAmountMax(value);
-                }}
-                variant="bordered"
-                isDisabled={isLoading || !filterState.filters.currency}
                 description={
                   !filterState.filters.currency ? 'Select a currency first' : ''
                 }
+                isDisabled={isLoading || !filterState.filters.currency}
+                label="Max Amount"
+                placeholder="Maximum amount"
+                type="number"
+                value={localAmountMax}
+                variant="bordered"
+                onValueChange={(value) => {
+                  setLocalAmountMax(value);
+                }}
               />
               {/* Date Range Filters*/}
               <div className="col-span-1 sm:col-span-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <Input
+                    isDisabled={isLoading}
                     label="Created After"
                     type="date"
-                    variant="bordered"
                     value={
                       filterState.filters.createdAfter
                         ? filterState.filters.createdAfter.split('T')[0]
                         : ''
                     }
+                    variant="bordered"
                     onValueChange={(value) => {
                       const isoString = value
                         ? `${value}T00:00:00.000Z`
                         : undefined;
+
                       handleFilterChange('createdAfter', isoString);
                     }}
-                    isDisabled={isLoading}
                   />
 
                   <Input
+                    isDisabled={isLoading}
                     label="Created Before"
                     type="date"
-                    variant="bordered"
                     value={
                       filterState.filters.createdBefore
                         ? filterState.filters.createdBefore.split('T')[0]
                         : ''
                     }
+                    variant="bordered"
                     onValueChange={(value) => {
                       const isoString = value
                         ? `${value}T23:59:59.999Z`
                         : undefined;
+
                       handleFilterChange('createdBefore', isoString);
                     }}
-                    isDisabled={isLoading}
                   />
                 </div>
               </div>

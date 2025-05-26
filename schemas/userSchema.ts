@@ -1,4 +1,5 @@
 import { z } from 'zod';
+
 import { PaymentMethodType } from '../types/enums/UserEnums';
 
 const PaymentMethodSchema = z.object({

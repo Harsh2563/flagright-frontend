@@ -1,5 +1,5 @@
-import UserForm from "@/components/user/form/UserForm";
+import UserForm from '@/components/user/form/UserForm';
 
 export default function AddUserPage() {
-    return (<UserForm />)
+  return <UserForm />;
 }

@@ -15,6 +15,7 @@ import {
   Divider,
 } from '@heroui/react';
 import { Country, State, City } from 'country-state-city';
+
 import { PaymentMethodType } from '../../../types/enums/UserEnums';
 import { UsersIcon } from '../../ui/icons';
 import { title } from '../../ui/primitives';
@@ -26,6 +27,7 @@ import {
 import { UserValidationErrors as ValidationErrors } from '../../../types/error';
 import { useUsers } from '../../../contexts/UserContext';
 import { BackButton } from '../../common/BackButton';
+
 import { useToastMessage } from '@/utils/toast';
 
 export default function UserForm({ id = undefined }: { id?: string }) {
@@ -48,10 +50,12 @@ export default function UserForm({ id = undefined }: { id?: string }) {
     country: '',
     paymentMethodTypes: [],
   });
+
   // Load user data if ID is provided
   useEffect(() => {
     if (id) {
       const user = getUserById(id);
+
       if (user) {
         // Convert IUser to UserFormType
         const userData = {
@@ -73,6 +77,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
         // Initialize states based on country
         if (userData.country) {
           const countryStates = State.getStatesOfCountry(userData.country);
+
           setStates(countryStates);
         }
 
@@ -82,6 +87,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
             userData.country,
             userData.state
           );
+
           setCities(stateCities);
         }
       }
@@ -102,6 +108,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
   useEffect(() => {
     if (formData.country) {
       const countryStates = State.getStatesOfCountry(formData.country);
+
       setStates(countryStates);
 
       // Only reset state and city if this is a new selection, not during initialization
@@ -118,6 +125,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
         formData.country,
         formData.state
       );
+
       setCities(stateCities);
 
       // Only reset city if this is a new selection, not during initialization
@@ -133,17 +141,21 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
     // Validate form data against the schema
     const validationResult = UserFormSchema.safeParse(formData);
+
     if (!validationResult.success) {
       console.log('Validation errors:', validationResult.error.errors);
 
       const errors: ValidationErrors = {};
+
       validationResult.error.errors.forEach((err) => {
         const path = err.path[0] as keyof ValidationErrors;
+
         errors[path] = err.message;
       });
 
       setValidationErrors(errors);
       toast.error('Please fix the validation errors before submitting');
+
       return;
     }
     try {
@@ -160,7 +172,9 @@ export default function UserForm({ id = undefined }: { id?: string }) {
         router.push('/users');
       } else {
         toast.error(
-          id ? 'Failed to update user. Please try again.' : 'Failed to create user. Please try again.'  
+          id
+            ? 'Failed to update user. Please try again.'
+            : 'Failed to create user. Please try again.'
         );
       }
     } catch (error) {
@@ -196,7 +210,7 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
       <div className="flex items-center gap-4 mb-6">
         <div className="p-2 bg-primary/10 rounded-full">
-          <UsersIcon size={24} className="text-primary" />
+          <UsersIcon className="text-primary" size={24} />
         </div>
         <h1 className={title({ size: 'sm' })}>
           {id ? 'Update User' : 'Add New User'}
@@ -211,48 +225,48 @@ export default function UserForm({ id = undefined }: { id?: string }) {
         <CardBody>
           <Form
             ref={formRef}
-            onSubmit={handleSubmit}
             className="space-y-10"
             validationBehavior="aria"
+            onSubmit={handleSubmit}
           >
             {/* Personal Info */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
-                label="First Name"
-                labelPlacement="outside"
+                isRequired
                 errorMessage={validationErrors.firstName}
                 isInvalid={!!validationErrors.firstName}
-                type="text"
+                label="First Name"
+                labelPlacement="outside"
                 name="firstName"
                 placeholder="Enter first name"
-                isRequired
+                type="text"
                 value={formData.firstName}
                 onValueChange={(val) =>
                   setFormData((p) => ({ ...p, firstName: val }))
                 }
               />
               <Input
-                label="Last Name"
-                labelPlacement="outside"
+                isRequired
                 errorMessage={validationErrors.lastName}
                 isInvalid={!!validationErrors.lastName}
-                type="text"
+                label="Last Name"
+                labelPlacement="outside"
                 name="lastName"
                 placeholder="Enter last name"
-                isRequired
+                type="text"
                 value={formData.lastName}
                 onValueChange={(val) =>
                   setFormData((p) => ({ ...p, lastName: val }))
                 }
               />
               <Input
+                isRequired
+                errorMessage={validationErrors.email}
+                isInvalid={!!validationErrors.email}
                 label="Email"
                 labelPlacement="outside"
                 name="email"
                 placeholder="Enter email address"
-                isRequired
-                errorMessage={validationErrors.email}
-                isInvalid={!!validationErrors.email}
                 type="email"
                 value={formData.email}
                 onValueChange={(val) =>
@@ -264,8 +278,8 @@ export default function UserForm({ id = undefined }: { id?: string }) {
                 labelPlacement="outside"
                 name="phone"
                 placeholder="Enter phone number"
-                value={formData.phone || ''}
                 type="tel"
+                value={formData.phone || ''}
                 onValueChange={(val) =>
                   setFormData((p) => ({ ...p, phone: val }))
                 }
@@ -275,13 +289,13 @@ export default function UserForm({ id = undefined }: { id?: string }) {
             <div className="space-y-8">
               <h3 className="text-lg font-semibold">Address Information</h3>
               <Input
+                errorMessage={validationErrors.street}
+                isInvalid={!!validationErrors.street}
                 label="Street Address"
                 labelPlacement="outside"
                 name="street"
                 placeholder="Enter street address"
                 value={formData.street || ''}
-                errorMessage={validationErrors.street}
-                isInvalid={!!validationErrors.street}
                 onValueChange={(val) =>
                   setFormData((p) => ({ ...p, street: val }))
                 }
@@ -289,18 +303,20 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Select
+                  className="w-full"
+                  errorMessage={validationErrors.country}
+                  isInvalid={!!validationErrors.country}
                   label="Country"
                   labelPlacement="outside"
                   name="country"
                   placeholder="Select a country"
                   selectedKeys={formData.country ? [formData.country] : []}
-                  errorMessage={validationErrors.country}
-                  isInvalid={!!validationErrors.country}
                   onSelectionChange={(keys) => {
                     const selectedKey =
                       keys instanceof Set
                         ? (Array.from(keys)[0] as string)
                         : undefined;
+
                     setFormData((prev) => ({
                       ...prev,
                       country: selectedKey || '',
@@ -308,7 +324,6 @@ export default function UserForm({ id = undefined }: { id?: string }) {
                       city: '', // Reset city when country changes
                     }));
                   }}
-                  className="w-full"
                 >
                   {countries.map((country) => (
                     <SelectItem key={country.isoCode} textValue={country.name}>
@@ -318,26 +333,27 @@ export default function UserForm({ id = undefined }: { id?: string }) {
                 </Select>
 
                 <Select
+                  className="w-full"
+                  errorMessage={validationErrors.state}
+                  isDisabled={!formData.country || states.length === 0}
+                  isInvalid={!!validationErrors.state}
                   label="State / Province"
                   labelPlacement="outside"
                   name="state"
                   placeholder="Select a state/province"
                   selectedKeys={formData.state ? [formData.state] : []}
-                  errorMessage={validationErrors.state}
-                  isInvalid={!!validationErrors.state}
                   onSelectionChange={(keys) => {
                     const selectedKey =
                       keys instanceof Set
                         ? (Array.from(keys)[0] as string)
                         : undefined;
+
                     setFormData((prev) => ({
                       ...prev,
                       state: selectedKey || '',
                       city: '', // Reset city when state changes
                     }));
                   }}
-                  isDisabled={!formData.country || states.length === 0}
-                  className="w-full"
                 >
                   {states.map((state) => (
                     <SelectItem key={state.isoCode} textValue={state.name}>
@@ -349,25 +365,26 @@ export default function UserForm({ id = undefined }: { id?: string }) {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <Select
+                  className="w-full"
+                  errorMessage={validationErrors.city}
+                  isDisabled={!formData.state || cities.length === 0}
+                  isInvalid={!!validationErrors.city}
                   label="City"
                   labelPlacement="outside"
                   name="city"
                   placeholder="Select a city"
                   selectedKeys={formData.city ? [formData.city] : []}
-                  errorMessage={validationErrors.city}
-                  isInvalid={!!validationErrors.city}
                   onSelectionChange={(keys) => {
                     const selectedKey =
                       keys instanceof Set
                         ? (Array.from(keys)[0] as string)
                         : undefined;
+
                     setFormData((prev) => ({
                       ...prev,
                       city: selectedKey || '',
                     }));
                   }}
-                  isDisabled={!formData.state || cities.length === 0}
-                  className="w-full"
                 >
                   {cities.map((city) => (
                     <SelectItem key={city.name} textValue={city.name}>
@@ -377,13 +394,13 @@ export default function UserForm({ id = undefined }: { id?: string }) {
                 </Select>
 
                 <Input
+                  errorMessage={validationErrors.postalCode}
+                  isInvalid={!!validationErrors.postalCode}
                   label="Postal Code"
                   labelPlacement="outside"
                   name="postalCode"
                   placeholder="Enter postal code"
                   value={formData.postalCode || ''}
-                  errorMessage={validationErrors.postalCode}
-                  isInvalid={!!validationErrors.postalCode}
                   onValueChange={(val) =>
                     setFormData((p) => ({ ...p, postalCode: val }))
                   }
@@ -399,25 +416,26 @@ export default function UserForm({ id = undefined }: { id?: string }) {
                 </span>
               </h3>
               <Select
+                className="w-full"
+                errorMessage={validationErrors.paymentMethodTypes}
+                isInvalid={!!validationErrors.paymentMethodTypes}
                 label="Payment Types"
                 labelPlacement="outside"
                 name="paymentMethodTypes"
                 placeholder="Select payment methods"
-                selectionMode="multiple"
                 selectedKeys={new Set(formData.paymentMethodTypes)}
-                errorMessage={validationErrors.paymentMethodTypes}
-                isInvalid={!!validationErrors.paymentMethodTypes}
+                selectionMode="multiple"
                 onSelectionChange={(keys) => {
                   const selectedKeys =
                     keys instanceof Set
                       ? (Array.from(keys) as PaymentMethodType[])
                       : [];
+
                   setFormData((prev) => ({
                     ...prev,
                     paymentMethodTypes: selectedKeys,
                   }));
                 }}
-                className="w-full"
               >
                 {Object.values(PaymentMethodType).map((type) => (
                   <SelectItem key={type} textValue={type.replace('_', ' ')}>
@@ -443,8 +461,8 @@ export default function UserForm({ id = undefined }: { id?: string }) {
           )}
           <div className="flex justify-end gap-2 w-full">
             <Button
-              variant="flat"
               color="default"
+              variant="flat"
               onClick={() => router.back()}
             >
               Cancel

@@ -31,24 +31,24 @@ export const GraphIcon = ({
   ...props
 }: IconSvgProps) => (
   <svg
-    height={size || height}
-    width={size || width}
-    viewBox="0 0 24 24"
     fill="none"
+    height={size || height}
     stroke="currentColor"
-    strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    width={size || width}
     {...props}
   >
     <circle cx="18" cy="18" r="3" />
     <circle cx="6" cy="6" r="3" />
     <circle cx="18" cy="6" r="3" />
     <circle cx="6" cy="18" r="3" />
-    <line x1="6" y1="9" x2="6" y2="15" />
-    <line x1="9" y1="6" x2="15" y2="6" />
-    <line x1="9" y1="18" x2="15" y2="18" />
-    <line x1="18" y1="9" x2="18" y2="15" />
+    <line x1="6" x2="6" y1="9" y2="15" />
+    <line x1="9" x2="15" y1="6" y2="6" />
+    <line x1="9" x2="15" y1="18" y2="18" />
+    <line x1="18" x2="18" y1="9" y2="15" />
   </svg>
 );
 
@@ -188,10 +188,10 @@ export const UsersIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
@@ -215,44 +215,44 @@ export const TransactionsIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
         d="M15.73 4.73L21 10L15.73 15.27"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="1.5"
       />
       <path
         d="M3 10H21"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="1.5"
       />
       <path
         d="M8.27 19.27L3 14L8.27 8.73"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="1.5"
       />
       <path
         d="M21 14H3"
         stroke="currentColor"
-        strokeWidth="1.5"
-        strokeMiterlimit="10"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeMiterlimit="10"
+        strokeWidth="1.5"
       />
     </svg>
   );
@@ -266,19 +266,19 @@ export const ChevronLeftIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
         d="M15 18L9 12L15 6"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="2"
       />
     </svg>
   );
@@ -292,19 +292,19 @@ export const ChevronRightIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
         d="M9 18L15 12L9 6"
         stroke="currentColor"
-        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="2"
       />
     </svg>
   );
@@ -318,10 +318,10 @@ export const RelationsIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
@@ -381,40 +381,40 @@ export const AnalyticsIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
       <path
         d="M3 22H21"
         stroke="currentColor"
-        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="1.5"
       />
       <path
         d="M5.59998 8.38H4C3.45 8.38 3 8.83 3 9.38V18C3 18.55 3.45 19 4 19H5.59998C6.14998 19 6.59998 18.55 6.59998 18V9.38C6.59998 8.83 6.14998 8.38 5.59998 8.38Z"
         stroke="currentColor"
-        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="1.5"
       />
       <path
         d="M12.8 5.19H11.2C10.65 5.19 10.2 5.64 10.2 6.19V18C10.2 18.55 10.65 19 11.2 19H12.8C13.35 19 13.8 18.55 13.8 18V6.19C13.8 5.64 13.35 5.19 12.8 5.19Z"
         stroke="currentColor"
-        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="1.5"
       />
       <path
         d="M20 2H18.4C17.85 2 17.4 2.45 17.4 3V18C17.4 18.55 17.85 19 18.4 19H20C20.55 19 21 18.55 21 18V3C21 2.45 20.55 2 20 2Z"
         stroke="currentColor"
-        strokeWidth="1.5"
         strokeLinecap="round"
         strokeLinejoin="round"
+        strokeWidth="1.5"
       />
     </svg>
   );
@@ -429,19 +429,19 @@ export const ProfileIcon: React.FC<IconSvgProps> = ({
   return (
     <div className="p-1 bg-primary/20 dark:bg-primary/30 rounded-full">
       <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
+        className="text-primary dark:text-primary-400"
         fill="none"
+        height="16"
         stroke="currentColor"
         strokeWidth="2"
-        className="text-primary dark:text-primary-400"
+        viewBox="0 0 24 24"
+        width="16"
       >
-        <path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2"></path>
-        <rect width="18" height="18" x="3" y="4" rx="2"></rect>
-        <circle cx="12" cy="10" r="2"></circle>
-        <line x1="8" x2="8" y1="2" y2="4"></line>
-        <line x1="16" x2="16" y1="2" y2="4"></line>
+        <path d="M17 18a2 2 0 0 0-2-2H9a2 2 0 0 0-2 2" />
+        <rect height="18" rx="2" width="18" x="3" y="4" />
+        <circle cx="12" cy="10" r="2" />
+        <line x1="8" x2="8" y1="2" y2="4" />
+        <line x1="16" x2="16" y1="2" y2="4" />
       </svg>
     </div>
   );
@@ -455,18 +455,18 @@ export const TransactionIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <line x1="12" y1="1" x2="12" y2="23"></line>
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      <line x1="12" x2="12" y1="1" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
     </svg>
   );
 };
@@ -479,18 +479,18 @@ export const CreditCardIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <rect width="20" height="14" x="2" y="5" rx="2"></rect>
-      <line x1="2" x2="22" y1="10" y2="10"></line>
+      <rect height="14" rx="2" width="20" x="2" y="5" />
+      <line x1="2" x2="22" y1="10" y2="10" />
     </svg>
   );
 };
@@ -503,20 +503,20 @@ export const CalendarIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <rect width="18" height="18" x="3" y="4" rx="2" ry="2"></rect>
-      <line x1="16" x2="16" y1="2" y2="6"></line>
-      <line x1="8" x2="8" y1="2" y2="6"></line>
-      <line x1="3" x2="21" y1="10" y2="10"></line>
+      <rect height="18" rx="2" ry="2" width="18" x="3" y="4" />
+      <line x1="16" x2="16" y1="2" y2="6" />
+      <line x1="8" x2="8" y1="2" y2="6" />
+      <line x1="3" x2="21" y1="10" y2="10" />
     </svg>
   );
 };
@@ -529,18 +529,18 @@ export const DollarSignIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <line x1="12" y1="1" x2="12" y2="23"></line>
-      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+      <line x1="12" x2="12" y1="1" y2="23" />
+      <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
     </svg>
   );
 };
@@ -553,18 +553,18 @@ export const ArrowRightIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <path d="M5 12h14"></path>
-      <path d="m12 5 7 7-7 7"></path>
+      <path d="M5 12h14" />
+      <path d="m12 5 7 7-7 7" />
     </svg>
   );
 };
@@ -577,18 +577,18 @@ export const MapPinIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-      <circle cx="12" cy="10" r="3"></circle>
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
     </svg>
   );
 };
@@ -601,18 +601,18 @@ export const DeviceIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect>
-      <path d="M12 18h.01"></path>
+      <rect height="20" rx="2" ry="2" width="14" x="5" y="2" />
+      <path d="M12 18h.01" />
     </svg>
   );
 };
@@ -625,19 +625,19 @@ export const InfoIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <circle cx="12" cy="12" r="10"></circle>
-      <path d="M12 16v-4"></path>
-      <path d="M12 8h.01"></path>
+      <circle cx="12" cy="12" r="10" />
+      <path d="M12 16v-4" />
+      <path d="M12 8h.01" />
     </svg>
   );
 };
@@ -650,18 +650,18 @@ export const UserIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-      <circle cx="12" cy="7" r="4"></circle>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
     </svg>
   );
 };
@@ -674,21 +674,21 @@ export const FileTextIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"></path>
-      <polyline points="14,2 14,8 20,8"></polyline>
-      <line x1="16" x2="8" y1="13" y2="13"></line>
-      <line x1="16" x2="8" y1="17" y2="17"></line>
-      <polyline points="10,9 9,9 8,9"></polyline>
+      <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z" />
+      <polyline points="14,2 14,8 20,8" />
+      <line x1="16" x2="8" y1="13" y2="13" />
+      <line x1="16" x2="8" y1="17" y2="17" />
+      <polyline points="10,9 9,9 8,9" />
     </svg>
   );
 };
@@ -701,18 +701,18 @@ export const AddIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       {...props}
     >
-      <line x1="12" y1="5" x2="12" y2="19" />
-      <line x1="5" y1="12" x2="19" y2="12" />
+      <line x1="12" x2="12" y1="5" y2="19" />
+      <line x1="5" x2="19" y1="12" y2="12" />
     </svg>
   );
 };
@@ -724,19 +724,19 @@ export const DownloadIcon = ({
   ...props
 }: IconSvgProps) => (
   <svg
-    height={size || height}
-    width={size || width}
-    viewBox="0 0 24 24"
     fill="none"
+    height={size || height}
     stroke="currentColor"
-    strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
+    strokeWidth="2"
+    viewBox="0 0 24 24"
+    width={size || width}
     {...props}
   >
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-    <polyline points="7 10 12 15 17 10"></polyline>
-    <line x1="12" y1="15" x2="12" y2="3"></line>
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+    <polyline points="7 10 12 15 17 10" />
+    <line x1="12" x2="12" y1="15" y2="3" />
   </svg>
 );
 
@@ -748,10 +748,10 @@ export const CurrencyIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
@@ -775,10 +775,10 @@ export const IdCardIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
@@ -806,10 +806,10 @@ export const EmailIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
@@ -833,10 +833,10 @@ export const PhoneIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
@@ -855,19 +855,19 @@ export const ExclamationIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      width={size}
-      height={size}
-      viewBox="0 0 24 24"
+      className={className}
       fill="none"
+      height={size}
       stroke={color}
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={className}
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size}
     >
-      <circle cx="12" cy="12" r="10"></circle>
-      <line x1="12" y1="8" x2="12" y2="12"></line>
-      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      <circle cx="12" cy="12" r="10" />
+      <line x1="12" x2="12" y1="8" y2="12" />
+      <line x1="12" x2="12.01" y1="16" y2="16" />
     </svg>
   );
 };
@@ -880,18 +880,18 @@ export const ResetIcon: React.FC<IconSvgProps> = ({
 }) => {
   return (
     <svg
-      height={size || height}
-      width={size || width}
-      viewBox="0 0 24 24"
       fill="none"
+      height={size || height}
       stroke="currentColor"
-      strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      strokeWidth="2"
+      viewBox="0 0 24 24"
+      width={size || width}
       xmlns="http://www.w3.org/2000/svg"
       {...props}
     >
-      <path d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3"></path>
+      <path d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" />
     </svg>
   );
 };

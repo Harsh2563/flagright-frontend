@@ -1,4 +1,3 @@
-import { IPaginationUser } from '@/types/pagination';
 import { UserFormType } from '../schemas/userSchema';
 import {
   IShortestPathResponseUser,
@@ -7,6 +6,8 @@ import {
 } from '../types/user';
 import api from '../utils/api';
 import { IUserSearchParams, IUserSearchResponse } from '../types/user';
+
+import { IPaginationUser } from '@/types/pagination';
 
 export async function getUsers(): Promise<{
   users: IUser[];
@@ -22,9 +23,11 @@ export async function getUsers(): Promise<{
       hasNextPage: false,
       hasPreviousPage: false,
     };
+
     return { users, pagination };
   } catch (error) {
     console.error('Error fetching users:', error);
+
     return { users: [], pagination: {} as IPaginationUser };
   }
 }
@@ -33,6 +36,7 @@ export async function handleUser(user: UserFormType): Promise<IUser> {
   try {
     const response = await api.post('/users', user);
     const newUser: IUser = response?.data?.data?.user;
+
     return newUser;
   } catch (error) {
     console.error('Error creating user:', error);
@@ -76,9 +80,11 @@ export async function searchUsers(
     }
 
     const finalUrl = `/users/search?${queryString.toString()}`;
+
     console.log('Final API URL:', finalUrl);
 
     const response = await api.get(finalUrl);
+
     return response.data;
   } catch (error) {
     console.error('Error searching users:', error);
@@ -91,6 +97,7 @@ export async function findShortestPath(
 ): Promise<IShortestPathResponseUser> {
   try {
     const response = await api.post('/users/shortest-path', users);
+
     return response.data;
   } catch (error) {
     console.error('Error finding shortest path:', error);

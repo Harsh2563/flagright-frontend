@@ -10,11 +10,13 @@ import {
   Spinner,
   Button,
 } from '@heroui/react';
+
+import { GraphIcon, DownloadIcon } from '../../ui/icons';
+
 import {
   ITransactionRelationshipGraphProps,
   ITransactionRelationshipGraphResponse,
 } from '@/types/relationship';
-import { GraphIcon, DownloadIcon } from '../../ui/icons';
 import { downloadFile } from '@/helper/helper';
 
 export function TransactionRelationshipGraph({
@@ -30,6 +32,7 @@ export function TransactionRelationshipGraph({
   const exportToCSV = () => {
     if (!relationships?.data) {
       alert('No relationship data available to export.');
+
       return;
     }
 
@@ -53,6 +56,7 @@ export function TransactionRelationshipGraph({
 
       // Center transaction label
       const centerTxLabel = `Transaction ${centerTxId.substring(0, 8)}...`;
+
       nodeLabels[centerTxId] = centerTxLabel;
 
       // Sender label
@@ -61,6 +65,7 @@ export function TransactionRelationshipGraph({
         const senderName =
           `${graphData.sender.firstName || ''} ${graphData.sender.lastName || ''}`.trim() ||
           'Sender';
+
         nodeLabels[senderId] = senderName;
       }
 
@@ -70,6 +75,7 @@ export function TransactionRelationshipGraph({
         const receiverName =
           `${graphData.receiver.firstName || ''} ${graphData.receiver.lastName || ''}`.trim() ||
           'Receiver';
+
         nodeLabels[receiverId] = receiverName;
       }
 
@@ -80,6 +86,7 @@ export function TransactionRelationshipGraph({
             const transaction = relationshipData.transaction;
             const txId = transaction.id || `device-tx-${index}`;
             const txLabel = `${transaction.amount} ${transaction.currency}`;
+
             nodeLabels[txId] = txLabel;
           }
         );
@@ -91,6 +98,7 @@ export function TransactionRelationshipGraph({
           const transaction = relationshipData.transaction;
           const txId = transaction.id || `ip-tx-${index}`;
           const txLabel = `${transaction.amount} ${transaction.currency}`;
+
           nodeLabels[txId] = txLabel;
         });
       }
@@ -201,6 +209,7 @@ export function TransactionRelationshipGraph({
       // If there are no rows (i.e., no relationships), add a message or skip export
       if (rows.length === 0) {
         alert('No relationships to export.');
+
         return;
       }
 
@@ -214,6 +223,7 @@ export function TransactionRelationshipGraph({
 
       // Create and download the file
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+
       downloadFile(blob, fileName);
     } catch (error) {
       console.error('Error exporting transaction graph data to CSV:', error);
@@ -237,6 +247,7 @@ export function TransactionRelationshipGraph({
 
     if (!relationships.data) {
       setGraphEmpty(true);
+
       return;
     }
 
@@ -251,6 +262,7 @@ export function TransactionRelationshipGraph({
     if (elements.nodes.length === 0) {
       console.log('No nodes found in the processed transaction data');
       setGraphEmpty(true);
+
       return;
     }
 
@@ -399,6 +411,7 @@ export function TransactionRelationshipGraph({
       // Add zoom controls
       cyRef.current.on('tap', 'node', function (evt) {
         const node = evt.target;
+
         cyRef.current?.animate({
           fit: {
             eles: node,
@@ -461,7 +474,7 @@ export function TransactionRelationshipGraph({
             className="flex justify-center items-center"
             style={{ minHeight: '300px' }}
           >
-            <Spinner size="lg" color="primary" />
+            <Spinner color="primary" size="lg" />
           </CardBody>
         </Card>
       </div>
@@ -500,11 +513,11 @@ export function TransactionRelationshipGraph({
             </h2>
           </div>{' '}
           <Button
-            variant="light"
+            className="whitespace-nowrap"
             color="primary"
             size="sm"
             startContent={<DownloadIcon size={16} />}
-            className="whitespace-nowrap"
+            variant="light"
             onPress={() => {
               exportToCSV();
             }}
@@ -518,22 +531,22 @@ export function TransactionRelationshipGraph({
             ref={graphContainerRef}
             className="graph-container rounded-md overflow-hidden border border-gray-200 dark:border-gray-700"
             style={{ height: '550px', width: '100%' }}
-          ></div>
+          />
           <div className="mt-4 pt-4 border-t grid grid-cols-2 md:grid-cols-4 gap-2 text-center text-xs">
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-3 rounded-full bg-[#10B981]"></span>
+              <span className="block w-3 h-3 rounded-full bg-[#10B981]" />
               <span>Transaction Flow</span>
             </div>
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-1 bg-[#DC2626]"></span>
+              <span className="block w-3 h-1 bg-[#DC2626]" />
               <span>Shared Device</span>
             </div>
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-1 bg-[#7C3AED] border-dotted border-2"></span>
+              <span className="block w-3 h-1 bg-[#7C3AED] border-dotted border-2" />
               <span>Shared IP</span>
             </div>
             <div className="flex items-center justify-center gap-1">
-              <span className="block w-3 h-3 rounded-full bg-[#059669]"></span>
+              <span className="block w-3 h-3 rounded-full bg-[#059669]" />
               <span>Center Transaction</span>
             </div>
           </div>
@@ -553,6 +566,7 @@ function processTransactionRelationshipsForGraph(
   const nodeIds = new Set<string>();
 
   const data = relationship.data;
+
   if (!data) return { nodes, edges };
 
   // Create center transaction node
@@ -563,15 +577,18 @@ function processTransactionRelationshipsForGraph(
       type: 'center',
     },
   };
+
   nodes.push(centerNode);
   nodeIds.add(centerNode.data.id);
   // Add sender node
   if (data.sender) {
     const senderId = data.sender.id || 'sender';
+
     if (!nodeIds.has(senderId)) {
       const senderName =
         `${data.sender.firstName || ''} ${data.sender.lastName || ''}`.trim() ||
         'Sender';
+
       nodes.push({
         data: {
           id: senderId,
@@ -597,10 +614,12 @@ function processTransactionRelationshipsForGraph(
   // Add receiver node
   if (data.receiver) {
     const receiverId = data.receiver.id || 'receiver';
+
     if (!nodeIds.has(receiverId)) {
       const receiverName =
         `${data.receiver.firstName || ''} ${data.receiver.lastName || ''}`.trim() ||
         'Receiver';
+
       nodes.push({
         data: {
           id: receiverId,

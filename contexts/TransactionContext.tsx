@@ -7,15 +7,17 @@ import React, {
   useCallback,
   ReactNode,
 } from 'react';
+import { z } from 'zod';
+
 import { ITransaction } from '../types/transaction';
 import {
   getTransactions,
   handleTransaction,
 } from '../services/transactionService';
-import { z } from 'zod';
 import { TransactionSchema } from '../schemas/transactionSchema';
-import { IPaginationTransaction } from '@/types/pagination';
 import { useToastMessage } from '../utils/toast';
+
+import { IPaginationTransaction } from '@/types/pagination';
 
 type TransactionSchemaType = z.infer<typeof TransactionSchema>;
 
@@ -58,7 +60,8 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
     try {
       setLoading(true);
       setError(null);
-      const {transactions, pagination} = await getTransactions();
+      const { transactions, pagination } = await getTransactions();
+
       setTransactions(transactions);
       setPagination(pagination);
       setInitialized(true);
@@ -76,6 +79,7 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       const { transactions, pagination } = await getTransactions();
+
       setTransactions(transactions);
       setPagination(pagination);
     } catch (err) {
@@ -105,11 +109,14 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
       try {
         setLoading(true);
         const newTransaction = await handleTransaction(transactionData);
+
         setTransactions((prev) => [...prev, newTransaction]);
+
         return newTransaction;
       } catch (err) {
         console.error('Error adding transaction:', err);
         setError('Failed to add transaction. Please try again later.');
+
         return null;
       } finally {
         setLoading(false);
@@ -138,10 +145,12 @@ export function TransactionProvider({ children }: { children: ReactNode }) {
 
 export function useTransactions() {
   const context = useContext(TransactionContext);
+
   if (context === undefined) {
     throw new Error(
       'useTransactions must be used within a TransactionProvider'
     );
   }
+
   return context;
 }
