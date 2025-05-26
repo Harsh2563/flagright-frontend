@@ -1,6 +1,10 @@
 import { IPaginationUser } from '@/types/pagination';
 import { UserFormType } from '../schemas/userSchema';
-import { IUser } from '../types/user';
+import {
+  IShortestPathResponseUser,
+  IShortestPathUser,
+  IUser,
+} from '../types/user';
 import api from '../utils/api';
 import { UserSearchParams, UserSearchResponse } from '../types/userFilter';
 
@@ -78,6 +82,18 @@ export async function searchUsers(
     return response.data;
   } catch (error) {
     console.error('Error searching users:', error);
+    throw error;
+  }
+}
+
+export async function findShortestPath(
+  users: IShortestPathUser
+): Promise<IShortestPathResponseUser> {
+  try {
+    const response = await api.post('/users/shortest-path', users);
+    return response.data;
+  } catch (error) {
+    console.error('Error finding shortest path:', error);
     throw error;
   }
 }

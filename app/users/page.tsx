@@ -4,6 +4,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { title, subtitle } from '../../components/ui/primitives';
 import { AddIcon, UsersIcon } from '../../components/ui/icons';
 import { UserCard } from '../../components/user/UserCard';
+import { ShortestPathFinder } from '../../components/user/ShortestPathFinder';
 import { useUsers } from '../../contexts/UserContext';
 import { useRouter } from 'next/navigation';
 import { UserSearchFilter } from '../../components/user/UserSearchFilter';
@@ -144,7 +145,6 @@ export default function UsersPage() {
           Add User
         </button>
       </div>
-
       {/* Search Filter Component */}
       <div className="mb-6">
         <UserSearchFilter
@@ -158,7 +158,8 @@ export default function UsersPage() {
           totalUsers={displayPagination.totalUsers}
         />
       </div>{' '}
-
+      {/* Shortest Path Component */}
+      <ShortestPathFinder users={contextUsers} isLoading={contextLoading} />
       {/* Results */}
       {displayLoading ? (
         <div className="flex justify-center py-10">
@@ -178,23 +179,21 @@ export default function UsersPage() {
             <UserCard key={user.id} user={user} />
           ))}
         </div>
-      )}    
-      {!displayLoading &&
-        !displayError &&
-        displayPagination.totalPages > 1 && (
-          <div className="mt-6">
-            <CustomPagination
-              pagination={displayPagination}
-              onPageChange={(page) => {
-                setFilterState({
-                  ...filterState,
-                  page,
-                });
-              }}
-              isDisabled={displayLoading}
-            />
-          </div>
-        )}
+      )}
+      {!displayLoading && !displayError && displayPagination.totalPages > 1 && (
+        <div className="mt-6">
+          <CustomPagination
+            pagination={displayPagination}
+            onPageChange={(page) => {
+              setFilterState({
+                ...filterState,
+                page,
+              });
+            }}
+            isDisabled={displayLoading}
+          />
+        </div>
+      )}
     </section>
   );
 }

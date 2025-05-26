@@ -7,3 +7,4 @@ export * from './UserDetails';
 export * from './UserNotFound';
 export * from './UserRelation';
 export * from './UserRelationshipGraph';
+export * from './ShortestPathFinder';
