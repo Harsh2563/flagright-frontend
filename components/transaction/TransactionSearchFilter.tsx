@@ -26,6 +26,7 @@ import {
 } from '@/types/enums/TransactionEnums';
 import { PaymentMethodType } from '@/types/enums/UserEnums';
 import { currencies } from '@/helper/helper';
+import { useToastMessage } from '@/utils/toast';
 
 interface TransactionSearchFiltersProps {
   filterState: TransactionFilterState;
@@ -45,13 +46,31 @@ export const TransactionSearchFilter: React.FC<
   const [localSearchText, setLocalSearchText] = useState(
     filterState.searchText || ''
   );
+  const [localAmountMin, setLocalAmountMin] = useState(
+    filterState.filters.amountMin?.toString() || ''
+  );
+  const [localAmountMax, setLocalAmountMax] = useState(
+    filterState.filters.amountMax?.toString() || ''
+  );
   const { users, getUserById } = useUsers();
-
+  const toast = useToastMessage();
   useEffect(() => {
     if (filterState.searchText !== undefined) {
       setLocalSearchText(filterState.searchText);
     }
   }, [filterState.searchText]);
+
+  useEffect(() => {
+    if (filterState.filters.amountMin !== undefined) {
+      setLocalAmountMin(filterState.filters.amountMin.toString());
+    }
+  }, [filterState.filters.amountMin]);
+
+  useEffect(() => {
+    if (filterState.filters.amountMax !== undefined) {
+      setLocalAmountMax(filterState.filters.amountMax.toString());
+    }
+  }, [filterState.filters.amountMax]);
 
   const handleFilterChange = (
     key: keyof TransactionSearchFilters,
@@ -85,9 +104,10 @@ export const TransactionSearchFilter: React.FC<
         !(Array.isArray(value) && value.length === 0)
     );
   };
-
   const clearAllFilters = () => {
     setLocalSearchText('');
+    setLocalAmountMin('');
+    setLocalAmountMax('');
     setSelectedSearchFields(new Set());
     onFilterChange({
       ...filterState,
@@ -95,6 +115,7 @@ export const TransactionSearchFilter: React.FC<
       searchText: undefined,
       page: 1,
     });
+    toast.info('All filters cleared');
     onReset();
   };
 
@@ -105,9 +126,20 @@ export const TransactionSearchFilter: React.FC<
   const [selectedSearchFields, setSelectedSearchFields] = useState<Set<string>>(
     new Set()
   );
-
   const handleSearch = () => {
     const newFilters = { ...filterState.filters };
+
+    if (localAmountMin) {
+      newFilters.amountMin = Number(localAmountMin);
+    } else {
+      newFilters.amountMin = undefined;
+    }
+
+    if (localAmountMax) {
+      newFilters.amountMax = Number(localAmountMax);
+    } else {
+      newFilters.amountMax = undefined;
+    }
 
     onFilterChange({
       ...filterState,
@@ -115,6 +147,8 @@ export const TransactionSearchFilter: React.FC<
       searchText: localSearchText || undefined,
       page: 1,
     });
+
+    toast.success('Search filters applied');
     onSearch();
   };
 
@@ -434,32 +468,30 @@ export const TransactionSearchFilter: React.FC<
                       method.replace('_', ' ').slice(1)}
                   </SelectItem>
                 ))}
-              </Select>
+              </Select>{' '}
               {/* Amount Min */}
               <Input
                 type="number"
                 label="Min Amount"
                 placeholder="Minimum amount"
-                value={filterState.filters.amountMin?.toString() || ''}
+                value={localAmountMin}
                 onValueChange={(value) => {
-                  const numValue = value ? Number(value) : undefined;
-                  handleFilterChange('amountMin', numValue);
+                  setLocalAmountMin(value);
                 }}
                 variant="bordered"
                 isDisabled={isLoading || !filterState.filters.currency}
                 description={
                   !filterState.filters.currency ? 'Select a currency first' : ''
                 }
-              />
+              />{' '}
               {/* Amount Max */}
               <Input
                 type="number"
                 label="Max Amount"
                 placeholder="Maximum amount"
-                value={filterState.filters.amountMax?.toString() || ''}
+                value={localAmountMax}
                 onValueChange={(value) => {
-                  const numValue = value ? Number(value) : undefined;
-                  handleFilterChange('amountMax', numValue);
+                  setLocalAmountMax(value);
                 }}
                 variant="bordered"
                 isDisabled={isLoading || !filterState.filters.currency}

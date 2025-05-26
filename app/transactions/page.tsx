@@ -11,6 +11,7 @@ import { ITransaction } from '@/types/transaction';
 import { TransactionFilterState } from '@/types/transactionFilter';
 import { searchTransactions } from '@/services/transactionService';
 import CustomPagination from '@/components/ui/CustomPagination';
+import { useToastMessage } from '@/utils/toast';
 
 export default function TransactionsPage() {
   const {
@@ -32,6 +33,7 @@ export default function TransactionsPage() {
     limit: 10,
   });
   const router = useRouter();
+  const toast = useToastMessage();
 
   const performSearch = useCallback(async () => {
     console.log('Performing search with filter state:', filterState);
@@ -56,21 +58,36 @@ export default function TransactionsPage() {
       }
     } catch (error) {
       console.error('Search error:', error);
+      toast.error('An error occurred while searching transactions');
       setSearchError('An error occurred while searching transactions');
       setSearchResults([]);
     } finally {
       setSearchLoading(false);
     }
   }, [filterState]);
-
-  // Automatically trigger search when filter state changes
+  // Automatically trigger search when pagination changes
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      performSearch();
-    }, 100); // Small delay to batch multiple rapid changes
+    if (isSearchMode) {
+      const shouldAutoSearch = ['page', 'limit', 'sortBy', 'sortOrder'].some(
+        (key) => filterState[key as keyof TransactionFilterState] !== undefined
+      );
 
-    return () => clearTimeout(timeoutId);
-  }, [performSearch]);
+      if (shouldAutoSearch) {
+        const timeoutId = setTimeout(() => {
+          performSearch();
+        }, 100); // Small delay to batch multiple rapid changes
+
+        return () => clearTimeout(timeoutId);
+      }
+    }
+  }, [
+    filterState.page,
+    filterState.limit,
+    filterState.sortBy,
+    filterState.sortOrder,
+    isSearchMode,
+    performSearch,
+  ]);
 
   // Reset search state
   const handleReset = useCallback(() => {
