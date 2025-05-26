@@ -12,7 +12,7 @@ import { link as linkStyles } from '@heroui/theme';
 import NextLink from 'next/link';
 import clsx from 'clsx';
 
-import { ThemeSwitch } from '../theme-switch';
+import { ThemeSwitch } from '../ThemeSwitch';
 import { siteConfig } from '../../config/site';
 import { Logo } from '../ui/icons';
 
