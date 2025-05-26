@@ -372,14 +372,14 @@ export const TransactionDetails: React.FC<TransactionDetailsProps> = ({
                       </p>
                     </div>
                   )}
-                  {transaction.deviceInfo.geolocation.city && (
+                  {transaction.deviceInfo.geolocation.state && (
                     <div>
                       <h3 className="text-sm font-medium text-default-500 flex items-center gap-2">
                         <MapPinIcon size={14} className="text-warning/70" />
-                        City
+                        State
                       </h3>
                       <p className="text-lg font-medium">
-                        {transaction.deviceInfo.geolocation.city}
+                        {transaction.deviceInfo.geolocation.state}
                       </p>
                     </div>
                   )}

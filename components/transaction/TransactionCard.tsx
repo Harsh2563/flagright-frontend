@@ -130,7 +130,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
                   `IP: ${transaction.deviceInfo.ipAddress}`}
                 {transaction.deviceInfo.geolocation &&
                   transaction.deviceInfo.geolocation.country &&
-                  ` | Location: ${transaction.deviceInfo.geolocation.city || ''} ${transaction.deviceInfo.geolocation.country}`}
+                  ` | Location: ${transaction.deviceInfo.geolocation.state || ''} ${transaction.deviceInfo.geolocation.country}`}
               </p>
             </div>
           )}

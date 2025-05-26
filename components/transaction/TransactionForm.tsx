@@ -74,6 +74,7 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
           senderId: transaction.senderId || '',
           receiverId: transaction.receiverId || '',
         });
+        console.log(transaction?.deviceInfo?.geolocation?.state);
       }
     }
   }, [id, getTransactionById]);
@@ -93,11 +94,24 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
       state: deviceInfo?.geolocation?.state || '',
     },
   });
-
   // Initialize countries list
   useEffect(() => {
     setCountries(Country.getAllCountries());
   }, []);
+
+  // Load states for a country without resetting the state field initially
+  useEffect(() => {
+    const loadStatesForCountry = () => {
+      if (formData.deviceInfo?.geolocation?.country) {
+        const countryStates = State.getStatesOfCountry(
+          formData.deviceInfo.geolocation.country
+        );
+        setStates(countryStates);
+      }
+    };
+
+    loadStatesForCountry();
+  }, [id]);
 
   // Update states when country changes
   useEffect(() => {
@@ -106,17 +120,19 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
         formData.deviceInfo.geolocation.country
       );
       setStates(countryStates);
-      setFormData((prev) => ({
-        ...prev,
-        deviceInfo: {
-          ...getDeviceInfo(prev.deviceInfo),
-          geolocation: {
-            ...getDeviceInfo(prev.deviceInfo).geolocation,
-            country: prev.deviceInfo?.geolocation?.country || '',
-            state: '',
+
+      if (!id || formData.deviceInfo.geolocation.state === '') {
+        setFormData((prev) => ({
+          ...prev,
+          deviceInfo: {
+            ...getDeviceInfo(prev.deviceInfo),
+            geolocation: {
+              ...getDeviceInfo(prev.deviceInfo).geolocation,
+              country: prev.deviceInfo?.geolocation?.country || '',
+            },
           },
-        },
-      }));
+        }));
+      }
     }
   }, [formData.deviceInfo?.geolocation?.country]);
 
@@ -250,7 +266,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   </SelectItem>
                 ))}
               </Select>
-
               <Select
                 label="Transaction Status"
                 labelPlacement="outside"
@@ -312,7 +327,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   </SelectItem>
                 ))}
               </Select>
-
               <Select
                 label="Receiver"
                 labelPlacement="outside"
@@ -348,7 +362,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   </SelectItem>
                 ))}
               </Select>
-
               <Input
                 id="amount"
                 name="amount"
@@ -426,7 +439,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   ))}
                 </>
               </Select>
-
               <Select
                 id="destinationCurrency"
                 name="destinationCurrency"
@@ -475,7 +487,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   ))}
                 </>
               </Select>
-
               <Input
                 id="destinationAmount"
                 name="destinationAmount"
@@ -498,7 +509,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                 isReadOnly={true}
                 errorMessage={validationErrors.destinationAmount}
               />
-
               <div className="col-span-1 md:col-span-2">
                 <Select
                   id="paymentMethod"
@@ -531,7 +541,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   ))}
                 </Select>
               </div>
-              
               <div className="col-span-1 md:col-span-2">
                 <Input
                   id="description"
@@ -576,7 +585,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   ))}
                 </Select>
               </div>{' '}
-
               {/* IP Address Field */}
               <div className="col-span-1 md:col-span-2">
                 <Input
@@ -619,7 +627,6 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   errorMessage={validationErrors.deviceInfo?.ipAddress}
                 />
               </div>
-
               {/* Country Field */}
               <div className="col-span-1 md:col-span-2">
                 <Select
@@ -683,7 +690,7 @@ export default function TransactionForm({ id = undefined }: { id?: string }) {
                   isInvalid={!!validationErrors.deviceInfo?.geolocation?.state}
                   selectedKeys={
                     formData.deviceInfo?.geolocation?.state
-                      ? [formData.deviceInfo.geolocation.state]
+                      ? [formData.deviceInfo.geolocation?.state]
                       : []
                   }
                   onSelectionChange={(keys) => {
