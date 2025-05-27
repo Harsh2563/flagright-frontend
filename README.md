@@ -2,7 +2,10 @@
 
 A frontend application for visualizing and analyzing user relationships and transactions.
 
-Frontend Repository Link: [https://github.com/Harsh2563/flagright-frontend](https://github.com/Harsh2563/flagright-frontend)
+- Frontend Repository Link: [https://github.com/Harsh2563/flagright-frontend](https://github.com/Harsh2563/flagright-frontend)
+- Backend Repository Link: [https://github.com/Harsh2563/flagright-backend](https://github.com/Harsh2563/flagright-backend)
+- Frontend Deployed Link: [https://flagright-frontend.vercel.app](https://flagright-frontend.vercel.app)
+- Backend Deployed Link: [https://flagright-backend-tvkg.onrender.com](https://flagright-backend-tvkg.onrender.com)
 
 ---
 
@@ -16,6 +19,7 @@ Frontend Repository Link: [https://github.com/Harsh2563/flagright-frontend](http
 - [Environment Variables](#environment-variables)
 - [Docker Configuration Files](#docker-configuration-files)
 - [Folder Structure](#folder-structure)
+- [Video Demonstration](#video-demonstration)
 
 ---
 
@@ -198,3 +202,10 @@ flagright-visualizer/
 ├── next.config.js          # Next.js configuration
 └── package.json            # Project dependencies
 ```
+
+---
+
+## Video Demonstration
+
+https://github.com/user-attachments/assets/6836de3b-3868-4f05-87f1-d5cb78328914
+
